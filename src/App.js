@@ -5,26 +5,32 @@ import Footer from './components/Footer';
 import Dashboard from './components/Dashboard';
 import ControlSidebar from './components/ControlSidebar';
 import Login from './components/Login'
-import Login2 from './components/Login2'
 import LeadGeneration from './components/LeadGeneration'
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
-
-  return (
-    <div className="App">
-      <Header />
-      <Sidebar />
-      {/* <Dashboard /> */}
-      
-      <LeadGeneration />
-      <Footer />
-      {/* <ControlSidebar /> */}
-      {/* <Login /> */}
-      {/* <Login2 /> */}
-
-    </div>
-  );
+  if(isLogin){
+    return (
+      <div className="App">
+        <Header />
+        <Sidebar />
+        <LeadGeneration />
+  
+        {/* <Footer /> */}
+        {/* <Dashboard /> */}
+        {/* <ControlSidebar /> */}
+        {/* <Login /> */}
+  
+      </div>
+    );
+  }else{
+    return(
+      <div className="App">
+        <Login setIsLogin={setIsLogin}/>
+        </div>
+    )
+  }
+  
 }
 
 export default App;
