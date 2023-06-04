@@ -5,29 +5,39 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles//ag-grid.css';
 import 'ag-grid-community/styles//ag-theme-alpine.css';
 import './leadGeneration.scss';
+
 function LeadGeneration() {
     const [refrencrOption, setResrenceOption] = useState(null);
     const [siteOption, setSiteOption] = useState(null);
     const [clientName, setClientName] = useState('');
     const [address, setAddress] = useState('');
     const [mobile, setMobile] = useState('');
+    const [email, setEmail] = useState('');
+    const [selectedFile, setSelectedFile] = useState('');
 
     const refrenceOptions = [
-        { value: 'brick-work', label: 'Brick work' },
-        { value: 'plaster', label: 'Plaster' },
-        { value: 'granite-work', label: 'Granite work' }
+        { value: 'architect/interior designer', label: 'Architect/Interior designer' },
+        { value: 'contractor', label: 'Contractor' },
+        { value: 'dealer', label: 'Dealer' },
+        { value: 'old cilent', label: 'Old cilent' },
+        { value: 'others', label: 'others' }
     ];
     const siteOptions = [
-        { value: 'brick-work1', label: 'Brick work1' },
-        { value: 'plaster1', label: 'Plaster1' },
-        { value: 'granite-work1', label: 'Granite work1' },
+        { value: 'brick-work', label: 'Brick work' },
+        { value: 'plaster', label: 'Plaster' },
+        { value: 'granite work', label: 'Granite work' },
+        { value: 'ready', label: 'Ready' }
+
     ]
     const handleRefrenceChange = (e) => {
-        setResrenceOption(e.target)
+        console.log('aaaa', e);
+        setResrenceOption(e.value)
     };
 
     const handleSiteChange = (e) => {
-        setSiteOption(e.target)
+        console.log('bbbbb', e);
+
+        setSiteOption(e.value)
     };
 
     const [columnDefs, setColumnDeft] = useState([
@@ -36,7 +46,12 @@ function LeadGeneration() {
         { headerName: "Address", field: "address" },
         { headerName: "Refrence", field: "refrence" },
         { headerName: "Site Stage", field: "sitestage" },
-        { headerName: "Upload", field: "upload" }
+        {
+            headerName: "Upload", field: "upload", cellRendererFramework: (params) =>
+                <div>
+                    <i className="fa fa-cloud-upload" data-toggle="modal" data-target="#uploadModal" aria-hidden="true"></i>
+                </div>
+        }
     ]);
     const handleClientName = (e) => {
         setClientName(e.target.value);
@@ -47,13 +62,9 @@ function LeadGeneration() {
     const handleMobile = (e) => {
         setMobile(e.target.value);
     }
-
-    const button = () => {
-        return (
-            `<button>ABC</button>`
-        );
+    const handleEmail = (e) => {
+        setEmail(e.target.value);
     }
-
 
     const [rowData, setRowData] = useState([
         { name: "Barun", mobile: "6260964301", address: "Vijay Nagar", refrence: "other", sitestage: "abc", upload: '' },
@@ -66,12 +77,14 @@ function LeadGeneration() {
         const data = {
             'client_name': clientName,
             'address': address,
-            'mobile': mobile
+            'mobile': mobile,
+            'refrence': refrencrOption,
+            'site_stage': siteOption
 
         }
-        axios.post('http://localhost/ventilia-api/api/leadGeneration/leadGeneration/', data, {
+        axios.post('http://192.168.29.237/ventilia-api/api/leadGeneration/leadGeneration/', data, {
             headers: {
-                'token_code': '54070e8cba76f55b',
+                'token_code':localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -79,29 +92,64 @@ function LeadGeneration() {
             }
         }).then((response) => {
             fetchData();
+            // $('#addLeadModal').modal('hide');
+
         }).catch(err => console.log('response catch', err));
 
     }
     const fetchData = () => {
-        axios.get('http://localhost/ventilia-api/api/leadGeneration/leadGeneration/', {
+        axios.get('http://192.168.29.237/ventilia-api/api/leadGeneration/leadGeneration/', {
             headers: {
-                'token_code': '54070e8cba76f55b',
+                'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            console.log('data is ==', response.data.data)
-            // setRowData(response.data.data.map((leadData) => {
-            //     name: leadData.client_name
-            // }))
+            setRowData(response.data.data.map((leadData) => ({
+                name: leadData.client_name,
+                mobile: leadData.mobile,
+                address: leadData.address,
+                refrence: leadData.refrence,
+                sitestage: leadData.site_stage
+            })))
+            console.log('rowData==', rowData)
         }).catch(err => console.log('response catch', err));
     }
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    const onChangeHandler = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
+    const onClickHandler = (file) => {
+        console.log('selectedFile', selectedFile.File)
+        const data = new FormData();
+        data.append("file", selectedFile);
+        console.log('data=', data)
+        for (var key of data.entries()) {
+            console.log(key[0] + ", " + key[1]);
+        }
+        axios
+            .post("http://192.168.29.237/ventilia-api/api/leadGeneration/leadGeneration/upload", data, {
+                headers: {
+                    'token_code': localStorage.getItem("token_code"),
+                    'content-type': 'multipart/form-data',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                    'Access-Control-Allow-Headers': '*'
+                }
+            })
+            .then(res => {
+                console.log(res.statusText);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
     return (
         <>
             <div className="content-wrapper leadGeneration-content">
@@ -125,116 +173,14 @@ function LeadGeneration() {
                                     <AgGridReact
                                         defaultColDef={{
                                             sortable: true,
-                                            filter: true
+                                            filter: true,
+                                            resizable: true
                                         }}
                                         pagination
                                         paginationPageSize={10}
                                         columnDefs={columnDefs}
                                         rowData={rowData}>
                                     </AgGridReact>
-                                    {/* <table id="example1" className="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Rendering engine</th>
-                                            <th>Browser</th>
-                                            <th>Platform(s)</th>
-                                            <th>Engine version</th>
-                                            <th>CSS grade</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Trident</td>
-                                            <td>Internet
-                                                Explorer 4.0
-                                            </td>
-                                            <td>Win 95+</td>
-                                            <td> 4</td>
-                                            <td>X</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Trident</td>
-                                            <td>Internet
-                                                Explorer 5.0
-                                            </td>
-                                            <td>Win 95+</td>
-                                            <td>5</td>
-                                            <td>C</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Trident</td>
-                                            <td>Internet
-                                                Explorer 5.5
-                                            </td>
-                                            <td>Win 95+</td>
-                                            <td>5.5</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Trident</td>
-                                            <td>Internet
-                                                Explorer 6
-                                            </td>
-                                            <td>Win 98+</td>
-                                            <td>6</td>
-                                            <td>A</td>
-                                        </tr>
-handleSiteChange
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Firefox 1.5</td>
-                                            <td>Win 98+ / OSX.2+</td>
-                                            <td>1.8</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Firefox 2.0</td>
-                                            <td>Win 98+ / OSX.2+</td>
-                                            <td>1.8</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Firefox 3.0</td>
-                                            <td>Win 2k+ / OSX.3+</td>
-                                            <td>1.9</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Camino 1.0</td>
-                                            <td>OSX.2+</td>
-                                            <td>1.8</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Camino 1.5</td>
-                                            <td>OSX.3+</td>
-                                            <td>1.8</td>
-                                            <td>A</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Gecko</td>
-                                            <td>Netscape 7.2</td>
-                                            <td>Win 95+ / Mac OS 8.6-9.2</td>
-                                            <td>1.7</td>
-                                            <td>A</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Rendering engine</th>
-                                            <th>Browser</th>
-                                            <th>Platform(s)</th>
-                                            <th>Engine version</th>
-                                            <th>CSS grade</th>
-                                        </tr>
-                                    </tfoot>
-                                </table> */}
                                 </div>
                             </div>
                         </div>
@@ -249,7 +195,6 @@ handleSiteChange
                                 <h4 className="modal-title">Generate Lead</h4>
                             </div>
                             <div className="modal-body">
-                                {/*  */}
                                 <div className="box-body">
                                     <form role="form">
                                         <div className="form-group">
@@ -291,6 +236,37 @@ handleSiteChange
                         </div>
                     </div>
                 </div>
+
+                <div className="modal fade" id="uploadModal">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Upload Document</h4>
+                            </div>
+                            <div className="modal-body">
+                                <div className="box-body">
+                                    <form role="form">
+                                        <div className="form-group">
+                                            <label>Upload</label>
+                                            <input type="file" onChange={onChangeHandler} className="form-control" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email Address</label>
+                                            <input type="text" value={email} onChange={handleEmail} className="form-control" placeholder="Email Address" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="button" onClick={onClickHandler} className="btn btn-primary">Share</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </>
     )

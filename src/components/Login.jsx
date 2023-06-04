@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import { useDispatch } from "react-redux";
+import {successLogin,failedLogin} from '../action/loginAction'
+
 function Login(props) {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-
+    // const dispatch =  useDispatch();
     const login = (props) => {
-        console.log(userName);
-        console.log(password)
         checkLogin();
     }
     const handleUsername = (e)=>{
@@ -20,7 +21,7 @@ function Login(props) {
             user: userName,
             password: password
         }
-        axios.post('http://localhost/ventilia-api/api/login/login', data, {
+        axios.post('http://192.168.29.237/ventilia-api/api/login/login', data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -28,7 +29,9 @@ function Login(props) {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            props.setIsLogin(true);
+            localStorage.setItem("token_code", response.data.data.token_code);
+            window.location.reload();
+            // dispatch(successLogin());
         }).catch(err => console.log('response catch', err));
     }
     return (

@@ -17,3 +17,8 @@
     background-repeat: no-repeat;
     margin-bottom:5rem;
  }
+ .side-bar-menu {
+  color: white;
+  margin: 3rem;
+  cursor: pointer;
+}
