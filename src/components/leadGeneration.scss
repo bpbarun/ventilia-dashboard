@@ -1,12 +1,26 @@
-.leadGeneration-content{
-    .top-right-btn{
+.leadGeneration-content {
+    .top-right-btn {
         width: 8rem;
         margin: 1rem;
     }
-    .form-label{
+
+    .form-label {
         margin-top: 0.5rem;
     }
-    .fa-cloud-upload{
+
+    .fa-cloud-upload {
         font-size: 3rem;
     }
+
+    .tableImage {
+        width: 8rem;
+        height: 4rem;
+    }
 }
+
+.ag-cell:focus{
+    border:none !important;
+    outline: none;
+    }
+    
+    

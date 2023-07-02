@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { useDispatch } from "react-redux";
-import {successLogin,failedLogin} from '../action/loginAction'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login(props) {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    // const dispatch =  useDispatch();
     const login = (props) => {
         checkLogin();
     }
-    const handleUsername = (e)=>{
+    const handleUsername = (e) => {
         setUserName(e.target.value)
     }
-    const handlePassword = (e)=>{
+    const handlePassword = (e) => {
         setPassword(e.target.value)
     }
     const checkLogin = () => {
@@ -29,15 +28,36 @@ function Login(props) {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
+            notify('Welcome to ventilia CMS.', 'success')
             localStorage.setItem("token_code", response.data.data.token_code);
-            window.location.reload();
-            // dispatch(successLogin());
-        }).catch(err => console.log('response catch', err));
+            localStorage.setItem("user_id", response.data.data.user_id);
+            localStorage.setItem("user_name", response.data.data.user_name);
+            localStorage.setItem("token_id", response.data.data.token_id);
+            localStorage.setItem("user_role", response.data.data.user_role);
+            if (response.data.data.user_role === 'technical') {
+                window.location = "/QuotationUpload";
+            } else {
+                window.location = "/LeadGeneratioln";
+            }
+        }).catch(err => {
+            notify('Invalid credentials', 'error')
+            console.log(err);
+        });
+    }
+    const notify = (msg, type) => {
+        if (type === 'success') {
+            toast.success(msg);
+        } else if (type === 'error') {
+            toast.error(msg);
+        } else {
+            toast(msg);
+        }
     }
     return (
         <>
             <div >
                 <body className="login-page">
+                    <ToastContainer />
                     <div className="login_page_wrapper">
                         <div className="login-box">
                             <div className="login-box-body">
@@ -47,11 +67,11 @@ function Login(props) {
                                 </div>
                                 <form action="../../index2.html" method="post">
                                     <div className="form-group has-feedback">
-                                        <input type="text" className="form-control" placeholder="Username" onChange={handleUsername}/>
+                                        <input type="text" className="form-control" placeholder="Username" onChange={handleUsername} />
                                         <span className="glyphicon glyphicon-user form-control-feedback"></span>
                                     </div>
                                     <div className="form-group has-feedback">
-                                        <input type="password" className="form-control" placeholder="Password" onChange={handlePassword}/>
+                                        <input type="password" className="form-control" placeholder="Password" onChange={handlePassword} />
                                         <span className="glyphicon glyphicon-lock form-control-feedback"></span>
                                     </div>
                                     <div className="row">

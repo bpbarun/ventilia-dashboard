@@ -13,6 +13,8 @@ import ControlSidebar from './components/ControlSidebar';
 import Login from './components/Login';
 import LeadGeneration from './components/LeadGeneration';
 import UploadQuatation from './components/UploadQuatation';
+import Reports from './components/Reports';
+
 
 function App() {
   const [token_code, setTokenCode] = useState('');
@@ -33,41 +35,20 @@ function App() {
   }, [])
   if (token_code) {
 
-  return (
-    <>
-    <Header />
-    <Sidebar />
-      <Routes>
-        <Route path="/" element={<LeadGeneration />} />
-        <Route path="/LeadGeneratioln" element={<LeadGeneration />} />
-        <Route path="/QuotationUpload" element={<UploadQuatation />} />
+    return (
+      <>
+        <Header />
+        <Sidebar />
+        <Routes>
+          <Route path="/" element={<LeadGeneration />} />
+          <Route path="/LeadGeneratioln" element={<LeadGeneration />} />
+          <Route path="/QuotationUpload" element={<UploadQuatation />} />
+          <Route path="/Reports" element={<Reports />} />
 
-      </Routes>
-    </>
-
-
-
-  )
-
-  // return (
-  //   // <Router>
-  //   <div className="App">
-  //     <Header />
-  //     <Sidebar />
-  //     {/* <LeadGeneration /> */}
-  //     {/* <UploadQuatation /> */}
-  //     {/* <Footer /> */}
-  //     {/* <Dashboard /> */}
-  //     {/* <ControlSidebar /> */}
-  //     {/* <Login /> */}
-  //     <Routes>
-  //       <Route exact path="/LeadGeneratioln" component={LeadGeneration} />
-  //       <Route exact path="/QuotationUpload" component={UploadQuatation} />
-  //     </Routes>
-  //   </div>
-  //   // </Router>
-  // );
-  } 
+        </Routes>
+      </>
+    )
+  }
   else {
     return (
       <div className="App">
