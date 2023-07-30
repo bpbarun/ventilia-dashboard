@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IP } from './Constant';
 
 function Login(props) {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+
     const login = (props) => {
         checkLogin();
     }
@@ -20,7 +22,7 @@ function Login(props) {
             user: userName,
             password: password
         }
-        axios.post('http://192.168.29.237/ventilia-api/api/login/login', data, {
+        axios.post(IP + 'ventilia-api/index.php/api/login/login', data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -37,7 +39,8 @@ function Login(props) {
             if (response.data.data.user_role === 'technical') {
                 window.location = "/QuotationUpload";
             } else {
-                window.location = "/LeadGeneratioln";
+                window.location = "/LeadGeneration";
+
             }
         }).catch(err => {
             notify('Invalid credentials', 'error')
@@ -65,7 +68,7 @@ function Login(props) {
                                 <div className="login_heading">
                                     <div className="user_avatar"></div>
                                 </div>
-                                <form action="../../index2.html" method="post">
+                                <form>
                                     <div className="form-group has-feedback">
                                         <input type="text" className="form-control" placeholder="Username" onChange={handleUsername} />
                                         <span className="glyphicon glyphicon-user form-control-feedback"></span>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles//ag-grid.css';
@@ -7,6 +6,7 @@ import 'ag-grid-community/styles//ag-theme-alpine.css';
 import './leadGeneration.scss';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { IP } from './Constant';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -44,7 +44,7 @@ function Reports() {
         { headerName: "Lead", field: "gst" },
         { headerName: "Progress", field: "freight" }]
     useEffect(() => {
-        axios.get('http://192.168.29.237/ventilia-api/api/leadGeneration/offerDetails/', {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/offerDetails/', {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ function Reports() {
             }
         }).then((response) => {
             (response.data.status) ?
-            setRowData(response.data.data.map((offerData) => ({
+                setRowData(response.data.data.map((offerData) => ({
                     offer_price: offerData.offer_price,
                     gst: offerData.gst,
                     freight: offerData.freight,
@@ -64,7 +64,7 @@ function Reports() {
 
         }).catch(err => console.log('response catch', err));
 
-    })
+    },[])
     return (
         <>
             <div className="content-wrapper">

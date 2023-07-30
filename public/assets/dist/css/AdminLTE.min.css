@@ -12,7 +12,7 @@
     display: inline-block;
     text-align: center;
     margin: auto;
-    background-image: url(/assets/dist/img/logo1.png);
+    background-image: url(../img/logo1.png);
     background-size: cover !important;
     background-repeat: no-repeat;
     margin-bottom:5rem;

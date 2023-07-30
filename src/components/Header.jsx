@@ -2,13 +2,14 @@ import React from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IP } from './Constant';
 function Header() {
     const logoutPopup = (id) => {
         let element = document.getElementById(id);
         element.classList.toggle('open');
     }
     const callLogout = () => {
-        axios.delete('http://192.168.29.237/ventilia-api/api/login/login/' + localStorage.getItem("token_id"), {
+        axios.delete(IP + 'ventilia-api/index.php/api/login/login/' + localStorage.getItem("token_id"), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',

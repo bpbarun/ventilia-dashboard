@@ -113,7 +113,7 @@ function LeadGeneration() {
             'is_active': 3,
             'complete_lead_comment': leadCompleteComment
         }
-        axios.put(IP + 'ventilia-api/api/leadGeneration/leadGeneration/' + uploadId, data, {
+        axios.put(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/' + uploadId, data, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ function LeadGeneration() {
             'is_active': 2,
             'cancel_lead_comment': leadCancelComment
         }
-        axios.put(IP + 'ventilia-api/api/leadGeneration/leadGeneration/' + uploadId, data, {
+        axios.put(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/' + uploadId, data, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ function LeadGeneration() {
     }
     const getOfferData = (id) => {
         setUploadId(id);
-        axios.get(IP + 'ventilia-api/api/leadGeneration/offerDetails/' + id, {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/offerDetails/' + id, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -178,7 +178,7 @@ function LeadGeneration() {
 
     const getCommentData = (id) => {
         setUploadId(id);
-        axios.get(IP + 'ventilia-api/api/leadGeneration/comment/' + id, {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/comment/' + id, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -203,7 +203,7 @@ function LeadGeneration() {
 
     const getQuotationData = (id) => {
         setUploadId(id);
-        axios.get(IP + 'ventilia-api/api/quotationUpload/quotationUpload/' + id, {
+        axios.get(IP + 'ventilia-api/index.php/api/quotationUpload/quotationUpload/' + id, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -228,7 +228,7 @@ function LeadGeneration() {
             console.log(err);
         });
     }
-    const [columnDefs, setColumnDeft] = useState([
+    const columnDefs = [
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
         { headerName: "Address", field: "address" },
@@ -267,7 +267,7 @@ function LeadGeneration() {
         },
 
 
-    ]);
+    ];
     const handleClientName = (e) => {
         setClientName(e.target.value);
     }
@@ -309,7 +309,7 @@ function LeadGeneration() {
             'is_active': 1,
             'lead_progress': 1
         }
-        axios.post(IP + 'ventilia-api/api/leadGeneration/leadGeneration/', data, {
+        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration', data, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -335,7 +335,7 @@ function LeadGeneration() {
             //uploadId is lead_id
             'lead_id': uploadId
         }
-        axios.post(IP + 'ventilia-api/api/leadGeneration/offerDetails/', data, {
+        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/offerDetails/', data, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -353,7 +353,7 @@ function LeadGeneration() {
 
     }
     const fetchData = () => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/', {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/', {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -400,7 +400,7 @@ function LeadGeneration() {
         data.append("lead_id", uploadId);
         data.append("is_active", 1);
         axios
-            .post(IP + "ventilia-api/api/leadGeneration/leadGeneration/upload", data, {
+            .post(IP + "ventilia-api/index.php/api/leadGeneration/leadGeneration/upload", data, {
                 headers: {
                     'token_code': localStorage.getItem("token_code"),
                     'content-type': 'multipart/form-data',
@@ -528,7 +528,7 @@ function LeadGeneration() {
             'comment': comment,
             'is_active': 1
         }
-        axios.post(IP + 'ventilia-api/api/leadGeneration/comment/', data, {
+        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/comment/', data, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',

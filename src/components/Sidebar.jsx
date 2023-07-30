@@ -4,7 +4,7 @@ import {
     NavLink
 } from "react-router-dom";
 function Sidebar() {
-    const [role, setRole] = useState(localStorage.getItem("user_role"))
+    const role = localStorage.getItem("user_role");
     return (
         <>
             <aside className="main-sidebar">
@@ -13,7 +13,7 @@ function Sidebar() {
                         <li className="active treeview menu-open">
                             {role === 'sealseman' &&
                                 <ul className="side-bar-menu">
-                                    <NavLink to="/LeadGeneratioln">
+                                    <NavLink to="/LeadGeneration">
                                         <li title="Dashboard">
                                             <span className="menu_title">Lead Generation</span>
                                         </li>

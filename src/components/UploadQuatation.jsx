@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
@@ -7,13 +6,11 @@ import 'ag-grid-community/styles//ag-grid.css';
 import 'ag-grid-community/styles//ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
-import { useNavigate } from "react-router-dom";
+import { IP } from './Constant';
 
 function UploadQuatation() {
     const [selectedFile, setSelectedFile] = useState('');
-    const [getQuotation, setGetQuotationValue] = useState('');
     const [uploadId, setUploadId] = useState(0);
-
     const [totalPrice, setTotalPrice] = useState('');
     const [totalUnit, setTotalUnit] = useState('');
     const [totalArea, setTotalArea] = useState('');
@@ -43,7 +40,7 @@ function UploadQuatation() {
 
         );
     }
-    const [columnDefs, setColumnDeft] = useState([
+    const columnDefs = [
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
         { headerName: "Address", field: "address" },
@@ -57,12 +54,12 @@ function UploadQuatation() {
             headerName: "Upload Quotation", field: "uploadQuotation",
             cellRenderer: "linkUploadQuotation"
         }
-    ]);
+    ];
 
     const [rowData, setRowData] = useState([]);
 
     const fetchData = () => {
-        axios.get('http://192.168.29.237/ventilia-api/api/leadGeneration/leadGeneration/getQuotationLead', {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getQuotationLead', {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -71,7 +68,6 @@ function UploadQuatation() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            setGetQuotationValue(response.data.data);
             setRowData(response.data.data.map((leadData) => ({
                 name: leadData.client_name,
                 mobile: leadData.mobile,
@@ -79,7 +75,7 @@ function UploadQuatation() {
                 refrence: leadData.refrence,
                 sitestage: leadData.site_stage,
                 uploadQuotation: leadData.lead_id,
-                viewDocument: 'http://192.168.29.237/lead/' + leadData.asset_name
+                viewDocument: IP + 'lead/' + leadData.asset_name
             })))
             console.log('rowData==', rowData)
         }).catch(err => {
@@ -105,7 +101,7 @@ function UploadQuatation() {
         data.append("total_unit", totalUnit);
         data.append("average_price", totalPrice);
         axios
-            .post("http://192.168.29.237/ventilia-api/api/quotationUpload/quotationUpload/", data, {
+            .post(IP + "ventilia-api/index.php/api/quotationUpload/quotationUpload/", data, {
                 headers: {
                     'token_code': localStorage.getItem("token_code"),
                     'content-type': 'multipart/form-data',

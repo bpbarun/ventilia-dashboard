@@ -1,7 +1,8 @@
 {
   "name": "ventilia",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "private": true,
+  "homepage": "",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -9,7 +10,7 @@
     "ag-grid-react": "^29.3.4",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
-    "node-sass": "^8.0.0",
+    "node-sass": "^9.0.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -44,5 +45,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devServer": {
+    "historyApiFallback": true,
+    "contentBase": "./",
+    "hot": true
   }
 }
