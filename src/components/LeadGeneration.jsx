@@ -15,7 +15,6 @@ function LeadGeneration() {
     const [clientName, setClientName] = useState('');
     const [address, setAddress] = useState('');
     const [mobile, setMobile] = useState('');
-    // const [email, setEmail] = useState('');
     const [selectedFile, setSelectedFile] = useState('');
     const [uploadId, setUploadId] = useState(0);
     const [offerPrice, setOfferPrice] = useState('');
@@ -104,7 +103,6 @@ function LeadGeneration() {
     function quotationImage(props) {
         return (
             (props.value !== '--') ? <a href={props.value} download target="_blank">View</a> : 'No Quotation'
-
         )
     }
     const completeLead = () => {
@@ -195,7 +193,6 @@ function LeadGeneration() {
 
                 }))) : setCommentRow([])
 
-
         }).catch(err => {
             console.log(err);
         });
@@ -235,7 +232,6 @@ function LeadGeneration() {
         { headerName: "Refrence", field: "refrence" },
         { headerName: "Site Stage", field: "sitestage" },
         { headerName: "Created Date", field: "created_date" },
-
         {
             headerName: "Upload", field: "upload",
             cellRenderer: "LinkComponent",
@@ -265,8 +261,6 @@ function LeadGeneration() {
             cellRenderer: "CreateMoreAction",
             cellStyle: { 'height': '20rem' },
         },
-
-
     ];
     const handleClientName = (e) => {
         setClientName(e.target.value);

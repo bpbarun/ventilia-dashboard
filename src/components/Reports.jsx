@@ -40,11 +40,11 @@ function Reports() {
         ],
     };
     const columnDefs = [
-        { headerName: "SealseMan Name", field: "offer_price" },
-        { headerName: "Lead", field: "gst" },
-        { headerName: "Progress", field: "freight" }]
+        { headerName: "SealseMan Name", field: "sealsman" },
+        { headerName: "Lead", field: "total_lead" },
+        { headerName: "Progress", field: "active_lead" }]
     useEffect(() => {
-        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/offerDetails/', {
+        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getReport', {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -53,18 +53,15 @@ function Reports() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            (response.data.status) ?
-                setRowData(response.data.data.map((offerData) => ({
-                    offer_price: offerData.offer_price,
-                    gst: offerData.gst,
-                    freight: offerData.freight,
+            setRowData(response.data.data.map((reportData) => ({
+                sealsman: reportData.user_name,
+                total_lead: reportData.total_lead,
+                active_lead: reportData.active_lead
 
-                }))) : setRowData([])
-
-
+            })))
         }).catch(err => console.log('response catch', err));
 
-    },[])
+    }, [])
     return (
         <>
             <div className="content-wrapper">
@@ -79,46 +76,46 @@ function Reports() {
                     </ol>
                 </section>
                 <section className="content">
-                    <div class="row">
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                    <div className="row">
+                        <div className="col-md-3 col-sm-6 col-xs-12">
+                            <div className="info-box">
+                                <span className="info-box-icon bg-aqua"><i className="ion ion-ios-gear-outline"></i></span>
 
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Total Lead</span>
-                                    <span class="info-box-number">90<small></small></span>
+                                <div className="info-box-content">
+                                    <span className="info-box-text">Total Lead</span>
+                                    <span className="info-box-number">90<small></small></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-yellow"><i class="fa fa-google-plus"></i></span>
+                        <div className="col-md-3 col-sm-6 col-xs-12">
+                            <div className="info-box">
+                                <span className="info-box-icon bg-yellow"><i className="fa fa-google-plus"></i></span>
 
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Active Lead </span>
-                                    <span class="info-box-number">40</span>
+                                <div className="info-box-content">
+                                    <span className="info-box-text">Active Lead </span>
+                                    <span className="info-box-number">40</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="clearfix visible-sm-block"></div>
+                        <div className="clearfix visible-sm-block"></div>
 
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                        <div className="col-md-3 col-sm-6 col-xs-12">
+                            <div className="info-box">
+                                <span className="info-box-icon bg-green"><i className="ion ion-ios-cart-outline"></i></span>
 
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Completed Lead</span>
-                                    <span class="info-box-number">30</span>
+                                <div className="info-box-content">
+                                    <span className="info-box-text">Completed Lead</span>
+                                    <span className="info-box-number">30</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 col-xs-12">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-red "><i class="ion ion-ios-people-outline"></i></span>
+                        <div className="col-md-3 col-sm-6 col-xs-12">
+                            <div className="info-box">
+                                <span className="info-box-icon bg-red "><i className="ion ion-ios-people-outline"></i></span>
 
-                                <div class="info-box-content">
-                                    <span class="info-box-text">Cancel Lead</span>
-                                    <span class="info-box-number">20</span>
+                                <div className="info-box-content">
+                                    <span className="info-box-text">Cancel Lead</span>
+                                    <span className="info-box-number">20</span>
                                 </div>
                             </div>
                         </div>
@@ -126,16 +123,8 @@ function Reports() {
                     <div className="row">
                         <section className="col-lg-7 connectedSortable">
                             <div className="nav-tabs-custom">
-                                <ul className="nav nav-tabs pull-right">
-                                    <li className="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
-                                    <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
-                                    <li className="pull-left header"><i className="fa fa-inbox"></i> Sales</li>
-                                </ul>
                                 <div className="tab-content no-padding">
-                                    <div className="chart tab-pane active" id="revenue-chart" style={{ position: "relative", height: "300px" }}>
-                                        Hello
-                                    </div>
-                                    <div className="chart tab-pane" id="sales-chart" style={{ position: "relative", height: "300px" }}>
+                                    <div className="chart tab-pane active" id="sales-chart" style={{ position: "relative", height: "300px" }}>
                                         <div
                                             className="ag-theme-alpine table"
                                             style={{
@@ -149,7 +138,6 @@ function Reports() {
                                                     filter: true,
                                                     resizable: true
                                                 }}
-
                                                 columnDefs={columnDefs}
                                                 rowData={rowData}
                                             >
@@ -160,12 +148,9 @@ function Reports() {
                             </div>
                         </section>
                         <section className="col-lg-5 connectedSortable">
-
                             <div className="box box-solid">
                                 <div className="box-header">
-
                                     <i className="fa fa-map-marker"></i>
-
                                     <h3 className="box-title">
                                         Graph
                                     </h3>
