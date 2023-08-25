@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Login from './components/Login';
 import LeadGeneration from './components/LeadGeneration';
+import Opportunity from './components/Opportunity';
 import UploadQuatation from './components/UploadQuatation';
 import Reports from './components/Reports';
 import { IP } from './components/Constant';
@@ -40,7 +41,9 @@ function App() {
           <Route path="/" element={<LeadGeneration />} />
           <Route path="/LeadGeneration" element={<LeadGeneration />} />
           <Route path="/QuotationUpload" element={<UploadQuatation />} />
+          <Route path="/QuotationUpload/:id" element={<UploadQuatation />} />
           <Route path="/Reports" element={<Reports />} />
+          <Route path="/Opportunity" element={<Opportunity />} />
         </Routes>
       </>
     )

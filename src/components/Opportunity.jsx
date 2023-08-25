@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Select from 'react-select';
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
@@ -9,12 +8,7 @@ import 'ag-grid-community/styles//ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 
-function LeadGeneration() {
-    const [refrencrOption, setResrenceOption] = useState(null);
-    const [siteOption, setSiteOption] = useState(null);
-    const [clientName, setClientName] = useState('');
-    const [address, setAddress] = useState('');
-    const [mobile, setMobile] = useState('');
+function Opportunity() {
     const [selectedFile, setSelectedFile] = useState('');
     const [uploadId, setUploadId] = useState(0);
     const [offerPrice, setOfferPrice] = useState('');
@@ -27,7 +21,6 @@ function LeadGeneration() {
     const [quotationRow, setQuotationRow] = useState([]);
     const [leadCompleteComment, setLeadCompleteComment] = useState([]);
     const [leadCancelComment, setLeadCancelComment] = useState([]);
-    const [meetingDate, setMeetingDate] = useState('');
     const [closeDate, setCloseDate] = useState('');
     const [opportunity, setOpportunity] = useState('');
 
@@ -40,29 +33,6 @@ function LeadGeneration() {
             toast(msg);
         }
     }
-    const refrenceOptions = [
-        { value: 'architect/interior designer', label: 'Architect/Interior designer' },
-        { value: 'contractor', label: 'Contractor' },
-        { value: 'dealer', label: 'Dealer' },
-        { value: 'old cilent', label: 'Old cilent' },
-        { value: 'others', label: 'others' }
-    ];
-    const siteOptions = [
-        { value: 'brick-work', label: 'Brick work' },
-        { value: 'plaster', label: 'Plaster' },
-        { value: 'granite work', label: 'Granite work' },
-        { value: 'ready', label: 'Ready' }
-    ]
-
-    const handleRefrenceChange = (e) => {
-        console.log('aaaa', e);
-        setResrenceOption(e.value)
-    };
-
-    const handleSiteChange = (e) => {
-        console.log('bbbbb', e);
-        setSiteOption(e.value)
-    };
     function LinkComponent(props) {
         return (
             <div>
@@ -94,7 +64,7 @@ function LeadGeneration() {
         console.log('saveForOpportunity is =====', opportunity);
         const data = {
             'set_opportunity': 1,
-            'is_active': 1, 
+            'is_active': 1,
             lead_id: uploadId
         }
         axios
@@ -108,7 +78,7 @@ function LeadGeneration() {
                 }
             })
             .then(res => {
-                notify('Quotation uploaded successfullly.', 'success')
+                notify('Opportunity added successfullly.', 'success')
                 console.log(res.statusText);
             })
             .catch(err => {
@@ -299,15 +269,6 @@ function LeadGeneration() {
             cellStyle: { 'height': '20rem' },
         },
     ];
-    const handleClientName = (e) => {
-        setClientName(e.target.value);
-    }
-    const handleAddress = (e) => {
-        setAddress(e.target.value);
-    }
-    const handleMobile = (e) => {
-        setMobile(e.target.value);
-    }
     // const handleEmail = (e) => {
     //     setEmail(e.target.value);
     // }
@@ -330,33 +291,6 @@ function LeadGeneration() {
         setComment(e.target.value)
     }
 
-    const saveLead = () => {
-        const data = {
-            'client_name': clientName,
-            'address': address,
-            'mobile': mobile,
-            'refrence': refrencrOption,
-            'site_stage': siteOption,
-            'is_active': 1,
-            'meeting_date': meetingDate
-        }
-        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration', data, {
-            headers: {
-                'token_code': localStorage.getItem("token_code"),
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-                'Access-Control-Allow-Headers': '*'
-            }
-        }).then((response) => {
-            notify('Lead saved successfullly.', 'success')
-            fetchData();
-        }).catch(err => {
-            notify('Something got wrong please try again later.', 'error')
-            console.log(err);
-        });
-
-    }
     const saveOffer = () => {
         const data = {
             'offer_price': offerPrice,
@@ -385,7 +319,7 @@ function LeadGeneration() {
 
     }
     const fetchData = () => {
-        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/', {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getOpportunity', {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -590,10 +524,7 @@ function LeadGeneration() {
                     <div className="row">
                         <div className="box">
                             <div className="box-header">
-                                <h3 className="box-title">Lead Generation Detail</h3>
-                            </div>
-                            <div className="top-right-btn">
-                                <button type="button" className="btn btn-block btn-primary" data-toggle="modal" data-target="#addLeadModal">Add Lead</button>
+                                <h3 className="box-title">Lead Opportunnity Detail</h3>
                             </div>
                             <div className="box-body">
                                 <div
@@ -629,63 +560,6 @@ function LeadGeneration() {
                     </div>
 
                 </section>
-                <div className="modal fade" id="addLeadModal">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Generate Lead</h4>
-                            </div>
-                            <div className="modal-body">
-                                <div className="box-body">
-                                    <form role="form">
-                                        <div className="form-group">
-                                            <label>Name</label>
-                                            <input type="text" value={clientName} onChange={handleClientName} className="form-control" placeholder="Client Name" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Mobile</label>
-                                            <input type="text" value={mobile} onChange={handleMobile} className="form-control" pattern="\d*" placeholder="Mobile Number" maxLength="11" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Address</label>
-                                            <textarea value={address} onChange={handleAddress} className="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Refrence</label>
-                                            <Select
-                                                defaultValue={refrencrOption}
-                                                onChange={handleRefrenceChange}
-                                                options={refrenceOptions}
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Site Stage</label>
-                                            <Select
-                                                defaultValue={siteOption}
-                                                onChange={handleSiteChange}
-                                                options={siteOptions}
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Next Meeting Date</label>
-                                            <div>
-                                                <input className="form-control" type="date" value={meetingDate}
-                                                    onChange={(e) => { setMeetingDate(e.target.value) }} />
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                {/*  */}
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                <button type="button" onClick={saveLead} className="btn btn-primary" data-dismiss="modal">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="modal fade" id="addOffer">
                     <div className="modal-dialog">
                         <div className="modal-content">
@@ -857,4 +731,4 @@ function LeadGeneration() {
         </>
     )
 }
-export default LeadGeneration;
+export default Opportunity;

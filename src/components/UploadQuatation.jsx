@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
@@ -14,8 +15,7 @@ function UploadQuatation() {
     const [totalPrice, setTotalPrice] = useState('');
     const [totalUnit, setTotalUnit] = useState('');
     const [totalArea, setTotalArea] = useState('');
-
-
+    const { id } = useParams();
     const notify = (msg, type) => {
         if (type === 'success') {
             toast.success(msg);
@@ -55,11 +55,10 @@ function UploadQuatation() {
             cellRenderer: "linkUploadQuotation"
         }
     ];
-
     const [rowData, setRowData] = useState([]);
-
     const fetchData = () => {
-        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getQuotationLead', {
+        let url = id !== undefined ? 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getQuotationLead/' + id : 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getQuotationLead'
+        axios.get(IP + url, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -68,25 +67,32 @@ function UploadQuatation() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            setRowData(response.data.data.map((leadData) => ({
-                name: leadData.client_name,
-                mobile: leadData.mobile,
-                address: leadData.address,
-                refrence: leadData.refrence,
-                sitestage: leadData.site_stage,
-                uploadQuotation: leadData.lead_id,
-                viewDocument: IP + 'lead/' + leadData.asset_name
-            })))
-            console.log('rowData==', rowData)
+            if (response.data.status) {
+                setRowData(response.data.data.map((leadData) => ({
+                    name: leadData.client_name,
+                    mobile: leadData.mobile,
+                    address: leadData.address,
+                    refrence: leadData.refrence,
+                    sitestage: leadData.site_stage,
+                    uploadQuotation: leadData.lead_id,
+                    viewDocument: IP + 'lead/' + leadData.asset_name
+                })))
+            } else {
+                setRowData([]);
+            }
         }).catch(err => {
             console.log(err);
-
         });
     }
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [id]);
+
 
     const onChangeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
