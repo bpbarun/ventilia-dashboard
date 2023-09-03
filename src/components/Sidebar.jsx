@@ -48,6 +48,13 @@ function Sidebar() {
                                             </li>
                                         </NavLink>
                                     </ul>
+                                    <ul className="side-bar-menu">
+                                        <NavLink to="/MyReport">
+                                            <li title="MyReport">
+                                                <span className="menu_title">MyReport</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
                                 </>
                             }
                             {role === 'technical' &&

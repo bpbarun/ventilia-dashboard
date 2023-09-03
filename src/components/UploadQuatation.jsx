@@ -15,6 +15,7 @@ function UploadQuatation() {
     const [totalPrice, setTotalPrice] = useState('');
     const [totalUnit, setTotalUnit] = useState('');
     const [totalArea, setTotalArea] = useState('');
+    const [quotationRow, setQuotationRow] = useState([]);
     const { id } = useParams();
     const notify = (msg, type) => {
         if (type === 'success') {
@@ -40,6 +41,39 @@ function UploadQuatation() {
 
         );
     }
+    function linkViewUploadQuotation(props) {
+        return (
+            <a onClick={() => getQuotationData(props.value)} data-toggle="modal" data-target="#showQuotation">Show Quotation</a>
+        );
+    }
+    const getQuotationData = (id) => {
+        setUploadId(id);
+        axios.get(IP + 'ventilia-api/index.php/api/quotationUpload/quotationUpload/' + id, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            (response.data.status) ?
+                setQuotationRow(response.data.data.map((quotationData) => ({
+                    select: quotationData.quotation_asset_id,
+                    active: quotationData.is_active === '1' ? 'Yes' : 'No',
+                    quotation: IP + 'lead/' + quotationData.asset_name,
+                    created_on: quotationData.created_on,
+                    totalarea: quotationData.total_area ? quotationData.total_area : '--',
+                    totalunit: quotationData.total_unit ? quotationData.total_unit : '--',
+                    averageprice: quotationData.average_price ? quotationData.average_price : '--',
+
+                }))) : setQuotationRow([])
+
+
+        }).catch(err => {
+            console.log(err);
+        });
+    }
     const columnDefs = [
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
@@ -53,6 +87,10 @@ function UploadQuatation() {
         {
             headerName: "Upload Quotation", field: "uploadQuotation",
             cellRenderer: "linkUploadQuotation"
+        },
+        {
+            headerName: "View Uploaded Quotation", field: "viewuploadQuotation",
+            cellRenderer: "linkViewUploadQuotation"
         }
     ];
     const [rowData, setRowData] = useState([]);
@@ -75,7 +113,8 @@ function UploadQuatation() {
                     refrence: leadData.refrence,
                     sitestage: leadData.site_stage,
                     uploadQuotation: leadData.lead_id,
-                    viewDocument: IP + 'lead/' + leadData.asset_name
+                    viewDocument: IP + 'lead/' + leadData.asset_name,
+                    viewuploadQuotation: leadData.lead_id
                 })))
             } else {
                 setRowData([]);
@@ -135,6 +174,51 @@ function UploadQuatation() {
     const handleTotalPrice = (e) => {
         setTotalPrice(e.target.value);
     }
+    function quotationImage(props) {
+        return (
+            (props.value !== '--') ? <a href={props.value} download target="_blank">View</a> : 'No Quotation'
+        )
+    }
+   
+    const quotationDataDisplay = () => {
+        const quotationColumn = [
+            
+            { headerName: "Active", field: "active" },
+            {
+                headerName: "View", field: "quotation",
+                cellRenderer: "quotationImage",
+            },
+            { headerName: "Created On", field: "created_on" },
+            { headerName: "Total Area", field: "totalarea" },
+            { headerName: "Total Unit", field: "totalunit" },
+            { headerName: "Average Price", field: "averageprice" },
+        ]
+        return (
+            <>
+                <div
+                    className="ag-theme-alpine"
+                    style={{
+                        height: '30rem',
+                        width: '100%',
+                    }}
+                >
+                    <AgGridReact
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            resizable: true
+                        }}
+                        columnDefs={quotationColumn}
+                        rowData={quotationRow}
+                        frameworkComponents={{
+                            quotationImage
+                        }}
+                    >
+                    </AgGridReact>
+                </div>
+            </>
+        )
+    }
     return (
         <>
             <div className="content-wrapper leadGeneration-content">
@@ -164,7 +248,8 @@ function UploadQuatation() {
                                         rowData={rowData}
                                         frameworkComponents={{
                                             LinkComponent,
-                                            linkUploadQuotation
+                                            linkUploadQuotation,
+                                            linkViewUploadQuotation
                                         }}
                                     >
                                     </AgGridReact>
@@ -211,7 +296,26 @@ function UploadQuatation() {
                         </div>
                     </div>
                 </div>
+                <div className="modal fade" id="showQuotation">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Quotation</h4>
+                            </div>
+                            <div className="modal-body">
 
+                                {quotationDataDisplay()}
+
+                            </div>
+
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )

@@ -7,29 +7,16 @@ import './leadGeneration.scss';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { IP } from './Constant';
-import { NavLink } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function Reports() {
+function MyReport() {
     const [rowData, setRowData] = useState([]);
     const [graphData, setGraphData] = useState();
     const [totalLead, setTotalLead] = useState();
     const [activeLead, setActiveLead] = useState();
     const [completedLead, setCompletedLead] = useState();
     const [cancelLead, setCancelLead] = useState();
-
-
-    const setSalesmanData = (id) => {
-        localStorage.setItem('salesmanUserID', id)
-    }
-    const LinkComponent = (props) => {
-        return (
-            <NavLink to='/MyReport' onClick={() => { setSalesmanData(props.value) }} style={{ color: "black" }}><a>More Details</a> 
-            </NavLink>
-        );
-
-    }
     const data = {
         labels: ['10%', '20%', '40%', '60%', '80%'],
         datasets: [
@@ -55,22 +42,21 @@ function Reports() {
         ],
     };
     const columnDefs = [
-        {
-            headerName: "#", field: "id",
-            cellRenderer: "LinkComponent"
-        },
-        { headerName: "SalesMan Name", field: "sealsman" },
-        { headerName: "Lead", field: "total_lead" },
-        { headerName: "Progress", field: "active_lead" },
-        { headerName: "10%", field: "ten" },
-        { headerName: "20%", field: "twenty" },
-        { headerName: "40%", field: "forty" },
-        { headerName: "60%", field: "sixty" },
-        { headerName: "80%", field: "eighty" }
-    ]
-    console.log('graphData is ==', graphData)
-    useEffect(() => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getReport', {
+        { headerName: "Name", field: "name" },
+        { headerName: "Lead Persentage", field: "lead_persentage" },
+        { headerName: "Mobile", field: "mobile" },
+        { headerName: "Address", field: "address" },
+        { headerName: "Refrence", field: "refrence" },
+        { headerName: "Meeting Date", field: "meeting_date" },
+        { headerName: "Site Stage", field: "sitestage" },
+        { headerName: "Created Date", field: "created_date" },
+        // {
+        //     headerName: "Upload", field: "upload",
+        //     cellRenderer: "LinkComponent",
+        // }
+    ];
+    const fetchData = () => {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getUseLeadData/' + localStorage.getItem('salesmanUserID'), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -79,23 +65,27 @@ function Reports() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            setRowData(response.data.data.map((reportData) => ({
-                id: reportData.user_id,
-                sealsman: reportData.user_name,
-                total_lead: reportData.total_lead,
-                active_lead: reportData.active_lead,
-                ten: reportData.tenPer,
-                twenty: reportData.twentyPer,
-                forty: reportData.fortyPer,
-                sixty: reportData.sixtyPer,
-                eighty: reportData.eightyPer,
+            setRowData(response.data.data.map((leadData) => ({
+                name: leadData.client_name,
+                lead_persentage: leadData.lead_progress,
+                mobile: leadData.mobile,
+                address: leadData.address,
+                refrence: leadData.refrence,
+                meeting_date: leadData.meeting_date,
+                sitestage: leadData.site_stage,
+                created_date: leadData.created_on,
+                upload: leadData.lead_id,
             })))
-        }).catch(err => console.log('response catch', err));
-
-    }, [])
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     useEffect(() => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getGrapgData/', {
+        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getGrapgData/' + localStorage.getItem('salesmanUserID'), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -104,14 +94,11 @@ function Reports() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            console.log('response.data.data.graph ====', response.data.data.graph.toString())
             setGraphData(response.data.data.graph)
             setTotalLead(response.data.data.tiles.total_lead)
             setActiveLead(response.data.data.tiles.active_lead)
             setCompletedLead(response.data.data.tiles.completed_lead)
             setCancelLead(response.data.data.tiles.cancel_lead)
-
-
         }).catch(err => console.log('response catch', err));
 
     }, [])
@@ -120,7 +107,7 @@ function Reports() {
             <div className="content-wrapper">
                 <section className="content-header">
                     <h1>
-                        Dashboard
+                        Reports
                     </h1>
                     <ol className="breadcrumb">
                         <li><a href="#"><i className="fa fa-dashboard"></i> Home</a></li>
@@ -180,7 +167,7 @@ function Reports() {
                                         <div
                                             className="ag-theme-alpine table"
                                             style={{
-                                                height: '20rem',
+                                                height: '100rem',
                                                 width: '100%'
                                             }}
                                         >
@@ -190,11 +177,11 @@ function Reports() {
                                                     filter: true,
                                                     resizable: true
                                                 }}
+                                                pagination
+                                                paginationPageSize={10}
+                                                suppressRowTransform={true}
                                                 columnDefs={columnDefs}
                                                 rowData={rowData}
-                                                frameworkComponents={{
-                                                    LinkComponent
-                                                }}
                                             >
                                             </AgGridReact>
                                         </div>
@@ -220,4 +207,4 @@ function Reports() {
         </>
     )
 }
-export default Reports;
+export default MyReport;

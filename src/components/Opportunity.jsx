@@ -78,7 +78,7 @@ function Opportunity() {
                 }
             })
             .then(res => {
-                notify('Opportunity added successfullly.', 'success')
+                notify('Opportunity updated successfullly.', 'success')
                 console.log(res.statusText);
             })
             .catch(err => {
@@ -233,11 +233,11 @@ function Opportunity() {
     const columnDefs = [
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
-        { headerName: "Address", field: "address" },
-        { headerName: "Refrence", field: "refrence" },
+        // { headerName: "Address", field: "address" },
+        // { headerName: "Refrence", field: "refrence" },
         { headerName: "Meeting Date", field: "meeting_date" },
 
-        { headerName: "Site Stage", field: "sitestage" },
+        // { headerName: "Site Stage", field: "sitestage" },
         { headerName: "Created Date", field: "created_date" },
         {
             headerName: "Upload", field: "upload",
@@ -328,13 +328,14 @@ function Opportunity() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
+            console.log('response.data.data==',response.data.data)
             setRowData(response.data.data.map((leadData) => ({
                 name: leadData.client_name,
                 mobile: leadData.mobile,
-                address: leadData.address,
-                refrence: leadData.refrence,
+                // address: leadData.address,
+                // refrence: leadData.refrence,
                 meeting_date: leadData.meeting_date,
-                sitestage: leadData.site_stage,
+                // sitestage: leadData.site_stage,
                 created_date: leadData.created_on,
                 upload: leadData.lead_id,
                 totalarea: leadData.total_area ? leadData.total_area : '--',

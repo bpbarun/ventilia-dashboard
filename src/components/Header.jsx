@@ -20,7 +20,7 @@ function Header() {
         }).then((response) => {
             notify('Logout successfully.', 'success')
             localStorage.clear();
-            window.location = "/login";
+            window.location = "/";
         }).catch(err => console.log('response catch', err));
     }
     const notify = (msg, type) => {

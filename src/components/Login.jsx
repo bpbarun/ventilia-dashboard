@@ -36,11 +36,13 @@ function Login(props) {
             localStorage.setItem("user_name", response.data.data.user_name);
             localStorage.setItem("token_id", response.data.data.token_id);
             localStorage.setItem("user_role", response.data.data.user_role);
+            localStorage.setItem("salesmanUserID", response.data.data.user_id);
             if (response.data.data.user_role === 'technical') {
                 window.location = "/QuotationUpload";
-            } else {
+            } else if (response.data.data.user_role === 'sealseman') {
                 window.location = "/LeadGeneration";
-
+            } else {
+                window.location = "/Reports";
             }
         }).catch(err => {
             notify('Invalid credentials', 'error')
