@@ -8,6 +8,7 @@ import 'ag-grid-community/styles//ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import { IP } from './Constant';
+import ShowLeadAssets from './ShowLeadAssets';
 
 function UploadQuatation() {
     const [selectedFile, setSelectedFile] = useState('');
@@ -28,9 +29,9 @@ function UploadQuatation() {
     }
     function LinkComponent(props) {
         return (
-            <a href={props.value} download target="_blank">
-                Download Document
-            </a>
+            <div>
+                <a onClick={() => setUploadId(props.value)} data-toggle="modal" data-target="#downloadDocument">Download Document</a>
+            </div>
         );
     }
     function linkUploadQuotation(props) {
@@ -113,7 +114,7 @@ function UploadQuatation() {
                     refrence: leadData.refrence,
                     sitestage: leadData.site_stage,
                     uploadQuotation: leadData.lead_id,
-                    viewDocument: IP + 'lead/' + leadData.asset_name,
+                    viewDocument: leadData.lead_id,
                     viewuploadQuotation: leadData.lead_id
                 })))
             } else {
@@ -179,10 +180,10 @@ function UploadQuatation() {
             (props.value !== '--') ? <a href={props.value} download target="_blank">View</a> : 'No Quotation'
         )
     }
-   
+
     const quotationDataDisplay = () => {
         const quotationColumn = [
-            
+
             { headerName: "Active", field: "active" },
             {
                 headerName: "View", field: "quotation",
@@ -305,9 +306,26 @@ function UploadQuatation() {
                                 <h4 className="modal-title">Quotation</h4>
                             </div>
                             <div className="modal-body">
-
                                 {quotationDataDisplay()}
+                            </div>
 
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade" id="downloadDocument">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Download Document</h4>
+                            </div>
+                            <div className="modal-body">
+                                {uploadId && <ShowLeadAssets lead_id={uploadId} />}
                             </div>
 
                             <div className="modal-footer">

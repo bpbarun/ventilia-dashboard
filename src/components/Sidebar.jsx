@@ -8,7 +8,7 @@ function Sidebar() {
     const role = localStorage.getItem("user_role");
     const [sealseman, setSealseman] = useState([]);
     const fetchData = () => {
-        axios.get(IP + 'ventilia-api/index.php/api/user/user/technicalsidebar/', {
+        axios.get(IP + 'ventilia-api/index.php/api/user/user/technicalsidebar/'+localStorage.getItem("user_id"), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',

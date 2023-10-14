@@ -7,6 +7,8 @@ import 'ag-grid-community/styles//ag-grid.css';
 import 'ag-grid-community/styles//ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
+import UploadFile from './MyUpload';
+import ShowLeadAssets from './ShowLeadAssets';
 
 function Opportunity() {
     const [selectedFile, setSelectedFile] = useState('');
@@ -23,7 +25,9 @@ function Opportunity() {
     const [leadCancelComment, setLeadCancelComment] = useState([]);
     const [closeDate, setCloseDate] = useState('');
     const [opportunity, setOpportunity] = useState('');
-
+    const [eclientName, seteClientName] = useState('');
+    const [eaddress, seteAddress] = useState('');
+    // const [emobile, seteMobile] = useState('');
     const notify = (msg, type) => {
         if (type === 'success') {
             toast.success(msg);
@@ -97,12 +101,31 @@ function Opportunity() {
                             <ul className="dropdown-menu">
                                 <li role="presentation"><a data-toggle="modal" onClick={() => setUploadId(props.value)} data-target="#completeLead">Complete Lead</a></li>
                                 <li role="presentation"><a data-toggle="modal" onClick={() => setUploadId(props.value)} data-target="#cancelLead">Cancel Lead</a></li>
+                                <li role="presentation"><a onClick={() => { fetchLeadData(props.value) }} data-toggle="modal" data-target="#EditModal">Edit</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
             </>
         )
+    }
+    const fetchLeadData = (id) => {
+        setUploadId(id)
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/' + id, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            seteClientName(response.data.data.client_name)
+            seteAddress(response.data.data.address)
+            // seteMobile(response.data.data.mobile)
+        }).catch(err => {
+            console.log(err);
+        });
     }
     function quotationImage(props) {
         return (
@@ -193,7 +216,7 @@ function Opportunity() {
                 setCommentRow(response.data.data.map((commentData) => ({
                     comment: commentData.comment,
                     created_on: commentData.created_on,
-                    created_by: commentData.created_by,
+                    // created_by: commentData.created_by,
 
                 }))) : setCommentRow([])
 
@@ -233,7 +256,7 @@ function Opportunity() {
     const columnDefs = [
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
-        // { headerName: "Address", field: "address" },
+        { headerName: "Address", field: "address" },
         // { headerName: "Refrence", field: "refrence" },
         { headerName: "Meeting Date", field: "meeting_date" },
 
@@ -290,6 +313,15 @@ function Opportunity() {
     const handlecomment = (e) => {
         setComment(e.target.value)
     }
+    const handleEClientName = (e) => {
+        seteClientName(e.target.value);
+    }
+    const handleEAddress = (e) => {
+        seteAddress(e.target.value);
+    }
+    // const handleEMobile = (e) => {
+    //     seteMobile(e.target.value);
+    // }
 
     const saveOffer = () => {
         const data = {
@@ -316,7 +348,6 @@ function Opportunity() {
             notify('Something got wrong please try again later.', 'error')
             console.log(err);
         });
-
     }
     const fetchData = () => {
         axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getOpportunity', {
@@ -328,11 +359,11 @@ function Opportunity() {
                 'Access-Control-Allow-Headers': '*'
             }
         }).then((response) => {
-            console.log('response.data.data==',response.data.data)
+            console.log('response.data.data==', response.data.data)
             setRowData(response.data.data.map((leadData) => ({
                 name: leadData.client_name,
                 mobile: leadData.mobile,
-                // address: leadData.address,
+                address: leadData.address,
                 // refrence: leadData.refrence,
                 meeting_date: leadData.meeting_date,
                 // sitestage: leadData.site_stage,
@@ -419,8 +450,8 @@ function Opportunity() {
     function commentDataDisplay() {
         const commentColumn = [
             { headerName: "Comment", field: "comment" },
-            { headerName: "Created On", field: "created_on" },
-            { headerName: "Created by", field: "created_by" }]
+            { headerName: "Created On", field: "created_on" }
+        ]
         return (
             <>
                 <div
@@ -517,6 +548,38 @@ function Opportunity() {
             notify('Something got wrong please try again later.', 'error')
             console.log(err);
         });
+    }
+    const updateLead = () => {
+        if (eclientName === '') {
+            notify('Name is required parameter', 'error');
+            return;
+
+        }
+        //  else if (emobile === '') {
+        //     notify('Mobile no. is required parameter', 'error')
+        //     return;
+        // }
+        const data = {
+            'client_name': eclientName,
+            'address': eaddress,
+            // 'mobile': emobile,
+        }
+        axios.put(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/' + uploadId, data, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            notify('Lead updated successfullly.', 'success')
+            fetchData();
+        }).catch(err => {
+            notify('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
+
     }
     return (
         <>
@@ -615,21 +678,12 @@ function Opportunity() {
                             </div>
                             <div className="modal-body">
                                 <div className="box-body">
-                                    <form role="form">
-                                        <div className="form-group">
-                                            <label>Upload</label>
-                                            <input type="file" onChange={onChangeHandler} className="form-control" />
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <label>Email Address</label>
-                                            <input type="text" value={email} onChange={handleEmail} className="form-control" placeholder="Email Address" />
-                                        </div> */}
-                                    </form>
+                                    {uploadId && <UploadFile leadId={uploadId} />}
+                                    {uploadId && <ShowLeadAssets lead_id={uploadId} />}
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                <button type="button" onClick={onClickHandler} className="btn btn-primary" data-dismiss="modal">Share</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Ok</button>
                             </div>
                         </div>
                     </div>
@@ -724,6 +778,40 @@ function Opportunity() {
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                                 <button type="button" className="btn btn-primary" onClick={saveForOpportunity} data-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade" id="EditModal">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Update Lead</h4>
+                            </div>
+                            <div className="modal-body">
+                                <div className="box-body">
+                                    <form role="form">
+                                        <div className="form-group">
+                                            <label>Name</label>
+                                            <input type="text" value={eclientName} onChange={handleEClientName} className="form-control" placeholder="Client Name" />
+                                        </div>
+                                        {/* <div className="form-group">
+                                            <label>Mobile</label>
+                                            <input type="text" value={emobile} onChange={handleEMobile} className="form-control" pattern="\d*" placeholder="Mobile Number" maxLength="11" />
+                                        </div> */}
+                                        <div className="form-group">
+                                            <label>Address</label>
+                                            <textarea value={eaddress} onChange={handleEAddress} className="form-control" rows="3" placeholder="Enter ..."></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                {/*  */}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="button" onClick={updateLead} className="btn btn-primary" data-dismiss="modal">Update</button>
                             </div>
                         </div>
                     </div>

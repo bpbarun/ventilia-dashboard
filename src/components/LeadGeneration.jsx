@@ -8,6 +8,8 @@ import 'ag-grid-community/styles//ag-grid.css';
 import 'ag-grid-community/styles//ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
+import UploadFile from './MyUpload';
+import ShowLeadAssets from './ShowLeadAssets';
 
 function LeadGeneration() {
     const [refrencrOption, setResrenceOption] = useState(null);
@@ -21,7 +23,7 @@ function LeadGeneration() {
     const [quotationRow, setQuotationRow] = useState([]);
     const [meetingDate, setMeetingDate] = useState('');
     const [opportunity, setOpportunity] = useState('');
-
+    const [comment, setComment] = useState('');
     const [erefrencrOption, seteResrenceOption] = useState(null);
     const [esiteOption, seteSiteOption] = useState(null);
     const [eclientName, seteClientName] = useState('');
@@ -172,7 +174,9 @@ function LeadGeneration() {
     const handleMobile = (e) => {
         setMobile(e.target.value);
     }
-
+    const handleComment = (e) => {
+        setComment(e.target.value);
+    }
     const handleEClientName = (e) => {
         seteClientName(e.target.value);
     }
@@ -241,7 +245,8 @@ function LeadGeneration() {
             'refrence': refrencrOption,
             'site_stage': siteOption,
             'is_active': 1,
-            'meeting_date': meetingDate
+            'meeting_date': meetingDate,
+            'comment': comment
         }
         axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration', data, {
             headers: {
@@ -477,6 +482,10 @@ function LeadGeneration() {
                                                     onChange={(e) => { setMeetingDate(e.target.value) }} />
                                             </div>
                                         </div>
+                                        <div className="form-group">
+                                            <label>Comment</label>
+                                            <textarea value={comment} onChange={handleComment} className="form-control" rows="3" placeholder="Enter ..."></textarea>
+                                        </div>
                                     </form>
                                 </div>
                                 {/*  */}
@@ -560,21 +569,12 @@ function LeadGeneration() {
                             </div>
                             <div className="modal-body">
                                 <div className="box-body">
-                                    <form role="form">
-                                        <div className="form-group">
-                                            <label>Upload</label>
-                                            <input type="file" onChange={onChangeHandler} className="form-control" />
-                                        </div>
-                                        {/* <div className="form-group">
-                                            <label>Email Address</label>
-                                            <input type="text" value={email} onChange={handleEmail} className="form-control" placeholder="Email Address" />
-                                        </div> */}
-                                    </form>
+                                    {uploadId && <UploadFile leadId={uploadId} />}
+                                    {uploadId && <ShowLeadAssets lead_id={uploadId} />}
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                <button type="button" onClick={onClickHandler} className="btn btn-primary" data-dismiss="modal">Share</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Ok</button>
                             </div>
                         </div>
                     </div>

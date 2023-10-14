@@ -18,6 +18,8 @@ function Reports() {
     const [activeLead, setActiveLead] = useState();
     const [completedLead, setCompletedLead] = useState();
     const [cancelLead, setCancelLead] = useState();
+    const [cancelLeadRow, setCancelLeadRow] = useState([]);
+    const [completedLeadRow, setCompletedLeadRow] = useState([]);
 
 
     const setSalesmanData = (id) => {
@@ -25,7 +27,7 @@ function Reports() {
     }
     const LinkComponent = (props) => {
         return (
-            <NavLink to='/MyReport' onClick={() => { setSalesmanData(props.value) }} style={{ color: "black" }}><a>More Details</a> 
+            <NavLink to='/MyReport' onClick={() => { setSalesmanData(props.value) }} style={{ color: "black" }}><a>More Details</a>
             </NavLink>
         );
 
@@ -115,6 +117,114 @@ function Reports() {
         }).catch(err => console.log('response catch', err));
 
     }, [])
+    const completeLeadData = () => {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getCompletedLead', {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            (response.data.status) ?
+                setCompletedLeadRow(response.data.data.map((lead) => ({
+                    client_name: lead.client_name,
+                    mobile: lead.mobile,
+                    address: lead.address,
+                    complete_lead_comment: lead.complete_lead_comment,
+                    created_on: lead.created_on,
+                }))) : setCompletedLeadRow([])
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+    const showCompletedLead = () => {
+        const columnDefs1 = [
+            { headerName: "Client Name", field: "client_name" },
+            { headerName: "Mobile", field: "mobile" },
+            { headerName: "Address", field: "address" },
+            { headerName: "Comment", field: "complete_lead_comment" },
+            { headerName: "Created On", field: "created_on" }
+        ]
+        return (
+            <>
+                <div
+                    className="ag-theme-alpine"
+                    style={{
+                        height: '40rem',
+                        width: '100%',
+                    }}
+                >
+                    <AgGridReact
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            resizable: true
+                        }}
+
+                        columnDefs={columnDefs1}
+                        rowData={completedLeadRow}
+                    >
+                    </AgGridReact>
+                </div>
+            </>
+        )
+    }
+    const cancelLeadData = () => {
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getCancelLead', {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            (response.data.status) ?
+                setCancelLeadRow(response.data.data.map((lead) => ({
+                    client_name: lead.client_name,
+                    mobile: lead.mobile,
+                    address: lead.address,
+                    cancel_lead_comment: lead.cancel_lead_comment,
+                    created_on: lead.created_on,
+                }))) : setCancelLeadRow([])
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+    const showCancelLead = () => {
+        const columnDefs1 = [
+            { headerName: "Client Name", field: "client_name" },
+            { headerName: "Mobile", field: "mobile" },
+            { headerName: "Address", field: "address" },
+            { headerName: "Comment", field: "cancel_lead_comment" },
+            { headerName: "Created On", field: "created_on" }
+        ]
+        return (
+            <>
+                <div
+                    className="ag-theme-alpine"
+                    style={{
+                        height: '40rem',
+                        width: '100%',
+                    }}
+                >
+                    <AgGridReact
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            resizable: true
+                        }}
+
+                        columnDefs={columnDefs1}
+                        rowData={cancelLeadRow}
+                    >
+                    </AgGridReact>
+                </div>
+            </>
+        )
+    }
     return (
         <>
             <div className="content-wrapper">
@@ -151,7 +261,7 @@ function Reports() {
                         </div>
                         <div className="clearfix visible-sm-block"></div>
 
-                        <div className="col-md-3 col-sm-6 col-xs-12">
+                        <div className="col-md-3 col-sm-6 col-xs-12" onClick={() => { completeLeadData() }} data-toggle="modal" data-target="#showCompletedLead">
                             <div className="info-box">
                                 <span className="info-box-icon bg-green"></span>
 
@@ -161,7 +271,7 @@ function Reports() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-3 col-sm-6 col-xs-12">
+                        <div className="col-md-3 col-sm-6 col-xs-12" onClick={() => { cancelLeadData() }} data-toggle="modal" data-target="#showCancelLead">
                             <div className="info-box">
                                 <span className="info-box-icon bg-red "></span>
 
@@ -176,11 +286,11 @@ function Reports() {
                         <section className="col-lg-7 connectedSortable">
                             <div className="nav-tabs-custom">
                                 <div className="tab-content no-padding">
-                                    <div className="chart tab-pane active" id="sales-chart" style={{ position: "relative", height: "300px" }}>
+                                    <div className="chart tab-pane active" id="sales-chart">
                                         <div
                                             className="ag-theme-alpine table"
                                             style={{
-                                                height: '20rem',
+                                                height: '40rem',
                                                 width: '100%'
                                             }}
                                         >
@@ -190,6 +300,9 @@ function Reports() {
                                                     filter: true,
                                                     resizable: true
                                                 }}
+                                                pagination
+                                                paginationPageSize={10}
+                                                suppressRowTransform={true}
                                                 columnDefs={columnDefs}
                                                 rowData={rowData}
                                                 frameworkComponents={{
@@ -200,7 +313,9 @@ function Reports() {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
                         </section>
                         <section className="col-lg-5 connectedSortable">
                             <div className="box box-solid">
@@ -216,6 +331,40 @@ function Reports() {
                     </div>
 
                 </section>
+                <div className="modal fade" id="showCancelLead">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Cancel Lead</h4>
+                            </div>
+                            <div className="modal-body">
+                                {showCancelLead()}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade" id="showCompletedLead">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Completed Lead</h4>
+                            </div>
+                            <div className="modal-body">
+                                {showCompletedLead()}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )

@@ -16,11 +16,15 @@
         width: 8rem;
         height: 4rem;
     }
+
+    .uploadBtn {
+        margin-left: 50%;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 }
 
-.ag-cell:focus{
-    border:none !important;
+.ag-cell:focus {
+    border: none !important;
     outline: none;
-    }
-    
-    
+}
