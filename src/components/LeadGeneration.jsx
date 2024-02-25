@@ -30,7 +30,7 @@ function LeadGeneration() {
     const [eaddress, seteAddress] = useState('');
     const [emobile, seteMobile] = useState('');
     const [emeetingDate, seteMeetingDate] = useState('');
-
+    const [commentRow, setCommentRow] = useState([]);
     const notify = (msg, type) => {
         if (type === 'success') {
             toast.success(msg);
@@ -55,7 +55,6 @@ function LeadGeneration() {
     ]
 
     const handleRefrenceChange = (e) => {
-        console.log('aaaa', e);
         setResrenceOption(e.value)
     };
 
@@ -84,6 +83,34 @@ function LeadGeneration() {
         return (
             <a onClick={() => { fetchLeadData(props.value) }} data-toggle="modal" data-target="#EditModal">Edit</a>
         );
+    }
+    function showComment(props) {
+        return (
+            <a onClick={() => getCommentData(props.value)} data-toggle="modal" data-target="#showComment">Add/Show Comment</a>
+        );
+    }
+    const getCommentData = (id) => {
+        setUploadId(id);
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/comment/' + id, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            (response.data.status) ?
+                setCommentRow(response.data.data.map((commentData) => ({
+                    comment: commentData.comment,
+                    created_on: commentData.created_on,
+                    // created_by: commentData.created_by,
+
+                }))) : setCommentRow([])
+
+        }).catch(err => {
+            console.log(err);
+        });
     }
     const saveForOpportunity = () => {
         const data = {
@@ -159,6 +186,10 @@ function LeadGeneration() {
         {
             headerName: "View Quotation", field: "viewquotation",
             cellRenderer: "LinkComponentImage",
+        },
+        {
+            headerName: "Lead Comment", field: "leadcomment",
+            cellRenderer: "showComment",
         },
         {
             headerName: "Action", field: "edit_lead",
@@ -285,6 +316,7 @@ function LeadGeneration() {
                 created_date: leadData.created_on,
                 upload: leadData.lead_id,
                 viewquotation: leadData.lead_id,
+                leadcomment: leadData.lead_id,
                 edit_lead: leadData.lead_id,
             })))
         }).catch(err => {
@@ -387,6 +419,57 @@ function LeadGeneration() {
             </>
         )
     }
+    const addComment = () => {
+        const data = {
+            'lead_id': uploadId,
+            'comment': comment,
+            'is_active': 1
+        }
+        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/comment/', data, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            notify('Comment saved successfullly.', 'success')
+            fetchData();
+        }).catch(err => {
+            notify('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
+    }
+    function commentDataDisplay() {
+        const commentColumn = [
+            { headerName: "Comment", field: "comment" },
+            { headerName: "Created On", field: "created_on" }
+        ]
+        return (
+            <>
+                <div
+                    className="ag-theme-alpine"
+                    style={{
+                        height: '30rem',
+                        width: '100%',
+                    }}
+                >
+                    <AgGridReact
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            resizable: true
+                        }}
+                        columnDefs={commentColumn}
+                        rowData={commentRow}
+                        quotationImage
+                    >
+                    </AgGridReact>
+                </div>
+            </>
+        )
+    }
     return (
         <>
             <div className="content-wrapper leadGeneration-content">
@@ -421,6 +504,7 @@ function LeadGeneration() {
                                         frameworkComponents={{
                                             LinkComponent,
                                             LinkComponentImage,
+                                            showComment,
                                             LinkComponentEditLead
                                         }}
                                     >
@@ -482,10 +566,10 @@ function LeadGeneration() {
                                                     onChange={(e) => { setMeetingDate(e.target.value) }} />
                                             </div>
                                         </div>
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label>Comment</label>
                                             <textarea value={comment} onChange={handleComment} className="form-control" rows="3" placeholder="Enter ..."></textarea>
-                                        </div>
+                                        </div> */}
                                     </form>
                                 </div>
                                 {/*  */}
@@ -593,6 +677,32 @@ function LeadGeneration() {
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                                 <button type="button" className="btn btn-primary" onClick={saveForOpportunity} data-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade" id="showComment">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Comment</h4>
+                            </div>
+                            <div className="modal-body">
+
+                                {commentDataDisplay()}
+
+                            </div>
+                            <div className="modal-body">
+                                <label>Comment</label>
+                                <div className="form-group">
+                                    <textarea value={comment} onChange={handleComment} className="form-control" rows="3" placeholder="Enter any comment"></textarea>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                                <button type="button" onClick={addComment} className="btn btn-primary" data-dismiss="modal">Save</button>
                             </div>
                         </div>
                     </div>

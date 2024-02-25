@@ -22,9 +22,16 @@
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
+    .generate-offer-letter{
+        margin-left: 38%;
+        margin-bottom: 2rem;
+    }
 }
 
 .ag-cell:focus {
     border: none !important;
     outline: none;
+}
+.show-extra-checkbox{
+    margin-left: 1rem !important;
 }

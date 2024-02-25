@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from 'react-select';
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
@@ -9,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import UploadFile from './MyUpload';
 import ShowLeadAssets from './ShowLeadAssets';
-
+import GeneratePdfs from './GeneratePdf'
 function Opportunity() {
     const [selectedFile, setSelectedFile] = useState('');
     const [uploadId, setUploadId] = useState(0);
@@ -27,7 +28,15 @@ function Opportunity() {
     const [opportunity, setOpportunity] = useState('');
     const [eclientName, seteClientName] = useState('');
     const [eaddress, seteAddress] = useState('');
-    // const [emobile, seteMobile] = useState('');
+    const [profile, setProfile] = useState('');
+    const [hardware, setHardware] = useState('');
+    const [window_quantity, setWindowQuantity] = useState('');
+    const [glass, setGlass] = useState('');
+    const [showLetter, setShowLetter] = useState(false);
+    const [gstOption,setGstOption] = useState(null);
+    const [showExtra, setShowExtra] = useState(false);
+
+   
     const notify = (msg, type) => {
         if (type === 'success') {
             toast.success(msg);
@@ -56,7 +65,7 @@ function Opportunity() {
     }
     function showComment(props) {
         return (
-            <a onClick={() => getCommentData(props.value)} data-toggle="modal" data-target="#showComment">Add/Show Comment</a>
+            <a onClick={() => getCommentData(props.value)} data-toggle="modal" data-target="#showComment">Add/Show Chat</a>
         );
     }
     function selectOpportunity(props) {
@@ -216,8 +225,7 @@ function Opportunity() {
                 setCommentRow(response.data.data.map((commentData) => ({
                     comment: commentData.comment,
                     created_on: commentData.created_on,
-                    // created_by: commentData.created_by,
-
+                    user_name: commentData.user_name,
                 }))) : setCommentRow([])
 
         }).catch(err => {
@@ -304,6 +312,9 @@ function Opportunity() {
     const handleFreight = (e) => {
         setFreight(e.target.value)
     }
+    const handleShowExtra = () => {
+        setShowExtra(!showExtra);
+    };
     const handleLeadCompleteComment = (e) => {
         setLeadCompleteComment(e.target.value)
     }
@@ -324,14 +335,24 @@ function Opportunity() {
     // }
 
     const saveOffer = () => {
+        if(gstOption === null){
+            notify('Please select GstType','error');
+        }
         const data = {
             'offer_price': offerPrice,
+            'gstType':gstOption,
             'gst': gst,
             'freight': freight,
+            'show_extra':showExtra,
             'is_active': 1,
             //uploadId is lead_id
             'lead_id': uploadId,
-            'close_date': closeDate
+            'close_date': closeDate,
+            'profile': profile,
+            // 'window_quantity': window_quantity,
+            'hardware': hardware,
+            'glass': glass
+
         }
         axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/offerDetails/', data, {
             headers: {
@@ -450,7 +471,8 @@ function Opportunity() {
     function commentDataDisplay() {
         const commentColumn = [
             { headerName: "Comment", field: "comment" },
-            { headerName: "Created On", field: "created_on" }
+            { headerName: "Created On", field: "created_on" },
+            { headerName: "User Name", field: "user_name" }
         ]
         return (
             <>
@@ -581,6 +603,17 @@ function Opportunity() {
         });
 
     }
+    const showOfferLetter = () => {
+        fetchLeadData(uploadId);
+        setShowLetter(true);
+    }
+    const gstValue = [
+        { value: 'value', label: 'Value' },
+        { value: 'gst', label: 'Gst' }
+    ];
+    const handleGstValue = (e)=>{
+        setGstOption(e.value)
+    }
     return (
         <>
             <div className="content-wrapper leadGeneration-content">
@@ -644,15 +677,47 @@ function Opportunity() {
 
                                         <div className="form-group">
                                             <label>Offer Price</label>
-                                            <input type="text" value={offerPrice} onChange={handleOfferPrice} className="form-control" placeholder="Price" />
+                                            <input type="number" value={offerPrice} onChange={handleOfferPrice} className="form-control" placeholder="Price" />
                                         </div>
+
+                                        <div className="form-group">
+                                            <label>GST Type</label>
+                                            <Select
+                                                value={gstValue.filter(function (option) {
+                                                    return option.value === gstOption;
+                                                })}
+                                                onChange={handleGstValue}
+                                                options={gstValue}
+                                            />
+                                        </div>
+
                                         <div className="form-group">
                                             <label>GST</label>
                                             <input type="text" value={gst} onChange={handleGst} className="form-control" placeholder="GST" />
                                         </div>
                                         <div className="form-group">
                                             <label>Freight</label>
-                                            <input type="text" value={freight} onChange={handleFreight} className="form-control" placeholder="Freight Amount" />
+                                            <input type="number" value={freight} onChange={handleFreight} className="form-control" placeholder="Freight Amount" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Show Extra</label>
+                                            <input type="checkbox" onChange={handleShowExtra} className="show-extra-checkbox"/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Profile</label>
+                                            <input type="text" value={profile} onChange={(e) => { setProfile(e.target.value) }} className="form-control" placeholder="Profile" />
+                                        </div>
+                                        {/* <div className="form-group">
+                                            <label>Window Quantity</label>
+                                            <input type="text" value={window_quantity} onChange={(e) => { setWindowQuantity(e.target.value) }} className="form-control" placeholder="Window Quantity" />
+                                        </div> */}
+                                        <div className="form-group">
+                                            <label>Hardware</label>
+                                            <input type="text" value={hardware} onChange={(e) => { setHardware(e.target.value) }} className="form-control" placeholder="Hardware" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Glass</label>
+                                            <input type="text" value={glass} onChange={(e) => { setGlass(e.target.value) }} className="form-control" placeholder="Glass" />
                                         </div>
                                         <div className="form-group">
                                             <label>Closing Date</label>
@@ -663,8 +728,11 @@ function Opportunity() {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                <button type="button" onClick={saveOffer} className="btn btn-primary" data-dismiss="modal">Save</button>
+                                <button type="button" onClick={saveOffer} className="btn btn-primary">Save</button>
                             </div>
+                            <hr></hr>
+                            <button type="button" onClick={() => { showOfferLetter() }} className="btn btn-primary generate-offer-letter">Generate Offer Letter</button>
+                            {showLetter && <GeneratePdfs clientName={eclientName} address={eaddress} id={uploadId} />}
                         </div>
                     </div>
                 </div>

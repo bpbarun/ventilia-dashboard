@@ -1,0 +1,62 @@
+.invoice-content {
+    body {
+        font-family: Arial, sans-serif;
+        margin-left: 5rem;
+        padding: 20px;
+        // font-size: 15px;
+    }
+
+    .invoice {
+        max-width: 800px;
+        margin: 0 auto;
+        // border: 1px solid #ccc;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+    }
+
+    .right {
+        float: right;
+    }
+    .left{
+        float:left;
+    }
+    .client-info {
+        margin-top: 20px;
+    }
+
+    .terms-and-conditions {
+        margin-top: 20px;
+    }
+
+    .specifications {
+        margin-top: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .totals {
+        margin-top: 20px;
+        float: right;
+    }
+}
+
+.print-btn {
+    margin-left: 45%;
+    margin-bottom: 2rem;
+}
+.mynewpage {
+    margin-top: 5rem;
+}

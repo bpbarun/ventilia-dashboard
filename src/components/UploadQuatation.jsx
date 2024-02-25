@@ -16,6 +16,8 @@ function UploadQuatation() {
     const [totalPrice, setTotalPrice] = useState('');
     const [totalUnit, setTotalUnit] = useState('');
     const [totalArea, setTotalArea] = useState('');
+    const [comment, setComment] = useState('');
+    const [commentRow, setCommentRow] = useState([]);
     const [quotationRow, setQuotationRow] = useState([]);
     const { id } = useParams();
     const notify = (msg, type) => {
@@ -26,6 +28,9 @@ function UploadQuatation() {
         } else {
             toast(msg);
         }
+    }
+    const handlecomment = (e) => {
+        setComment(e.target.value)
     }
     function LinkComponent(props) {
         return (
@@ -42,10 +47,38 @@ function UploadQuatation() {
 
         );
     }
+    function showComment(props) {
+        return (
+            <a onClick={() => getCommentData(props.value)} data-toggle="modal" data-target="#showComment">Show Chat</a>
+        );
+    }
     function linkViewUploadQuotation(props) {
         return (
             <a onClick={() => getQuotationData(props.value)} data-toggle="modal" data-target="#showQuotation">Show Quotation</a>
         );
+    }
+    const getCommentData = (id) => {
+        setUploadId(id);
+        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/comment/' + id, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            (response.data.status) ?
+                setCommentRow(response.data.data.map((commentData) => ({
+                    comment: commentData.comment,
+                    created_on: commentData.created_on,
+                    user_name: commentData.user_name,
+
+                }))) : setCommentRow([])
+
+        }).catch(err => {
+            console.log(err);
+        });
     }
     const getQuotationData = (id) => {
         setUploadId(id);
@@ -67,6 +100,7 @@ function UploadQuatation() {
                     totalarea: quotationData.total_area ? quotationData.total_area : '--',
                     totalunit: quotationData.total_unit ? quotationData.total_unit : '--',
                     averageprice: quotationData.average_price ? quotationData.average_price : '--',
+                    delete: quotationData.quotation_asset_id,
 
                 }))) : setQuotationRow([])
 
@@ -88,6 +122,10 @@ function UploadQuatation() {
         {
             headerName: "Upload Quotation", field: "uploadQuotation",
             cellRenderer: "linkUploadQuotation"
+        },
+        {
+            headerName: "Lead Comment", field: "leadcomment",
+            cellRenderer: "showComment",
         },
         {
             headerName: "View Uploaded Quotation", field: "viewuploadQuotation",
@@ -115,6 +153,7 @@ function UploadQuatation() {
                     sitestage: leadData.site_stage,
                     uploadQuotation: leadData.lead_id,
                     viewDocument: leadData.lead_id,
+                    leadcomment: leadData.lead_id,
                     viewuploadQuotation: leadData.lead_id
                 })))
             } else {
@@ -158,7 +197,6 @@ function UploadQuatation() {
             })
             .then(res => {
                 notify('Quotation uploaded successfullly.', 'success')
-                console.log(res.statusText);
             })
             .catch(err => {
                 notify('Getting error in uploading the Quotation.', 'error')
@@ -180,7 +218,63 @@ function UploadQuatation() {
             (props.value !== '--') ? <a href={props.value} download target="_blank">View</a> : 'No Quotation'
         )
     }
-
+    function deleteQuotation(props){
+        return (
+             <span data-dismiss="modal" onClick={()=>{deleteQuuotationData(props.value)}}>
+                <i className="fa fa-trash" aria-hidden="true"></i>
+             </span> 
+        )
+    }
+    const deleteQuuotationData = (id)=>{
+        console.log('deleting quotation data is ===',id);
+        axios
+            .delete(IP + "ventilia-api/index.php/api/quotationUpload/quotationUpload/"+id, {
+                headers: {
+                    'token_code': localStorage.getItem("token_code"),
+                    'content-type': 'multipart/form-data',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                    'Access-Control-Allow-Headers': '*'
+                }
+            })
+            .then(res => {
+                notify('Quotation deleted successfullly.', 'success')
+            })
+            .catch(err => {
+                notify('Getting error in uploading the Quotation.', 'error')
+                console.log(err);
+            });
+    }
+    function commentDataDisplay() {
+        const commentColumn = [
+            { headerName: "Comment", field: "comment" },
+            { headerName: "Created On", field: "created_on" },
+            { headerName: "User Name", field: "user_name" } 
+        ]
+        return (
+            <>
+                <div
+                    className="ag-theme-alpine"
+                    style={{
+                        height: '30rem',
+                        width: '100%',
+                    }}
+                >
+                    <AgGridReact
+                        defaultColDef={{
+                            sortable: true,
+                            filter: true,
+                            resizable: true
+                        }}
+                        columnDefs={commentColumn}
+                        rowData={commentRow}
+                        quotationImage
+                    >
+                    </AgGridReact>
+                </div>
+            </>
+        )
+    }
     const quotationDataDisplay = () => {
         const quotationColumn = [
 
@@ -193,6 +287,9 @@ function UploadQuatation() {
             { headerName: "Total Area", field: "totalarea" },
             { headerName: "Total Unit", field: "totalunit" },
             { headerName: "Average Price", field: "averageprice" },
+            { headerName: "Delete", field: "delete",
+                cellRenderer:"deleteQuotation" },
+
         ]
         return (
             <>
@@ -212,13 +309,36 @@ function UploadQuatation() {
                         columnDefs={quotationColumn}
                         rowData={quotationRow}
                         frameworkComponents={{
-                            quotationImage
+                            quotationImage,
+                            deleteQuotation
                         }}
                     >
                     </AgGridReact>
                 </div>
             </>
         )
+    }
+    const addComment = () => {
+        const data = {
+            'lead_id': uploadId,
+            'comment': comment,
+            'is_active': 1
+        }
+        axios.post(IP + 'ventilia-api/index.php/api/leadGeneration/comment/', data, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            notify('Comment saved successfullly.', 'success')
+            fetchData();
+        }).catch(err => {
+            notify('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
     }
     return (
         <>
@@ -250,6 +370,7 @@ function UploadQuatation() {
                                         frameworkComponents={{
                                             LinkComponent,
                                             linkUploadQuotation,
+                                            showComment,
                                             linkViewUploadQuotation
                                         }}
                                     >
@@ -330,6 +451,32 @@ function UploadQuatation() {
 
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-default" data-dismiss="modal">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade" id="showComment">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 className="modal-title">Comment</h4>
+                            </div>
+                            <div className="modal-body">
+
+                                {commentDataDisplay()}
+
+                            </div>
+                            <div className="modal-body">
+                                <label>Comment</label>
+                                <div className="form-group">
+                                    <textarea value={comment} onChange={handlecomment} className="form-control" rows="3" placeholder="Enter any comment"></textarea>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                                <button type="button" onClick={addComment} className="btn btn-primary" data-dismiss="modal">Save</button>
                             </div>
                         </div>
                     </div>
