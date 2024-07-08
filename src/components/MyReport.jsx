@@ -7,6 +7,7 @@ import './leadGeneration.scss';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { IP } from './Constant';
+import { NavLink } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -24,7 +25,7 @@ function MyReport() {
     const [cancelLeadRow, setCancelLeadRow] = useState([]);
     const [completedLeadRow, setCompletedLeadRow] = useState([]);
 
-
+        
     const data = {
         labels: ['10%', '20%', '40%', '60%', '80%'],
         datasets: [
@@ -441,8 +442,14 @@ function MyReport() {
                         Reports
                     </h1>
                     <ol className="breadcrumb">
-                        <li><a href="#"><i className="fa fa-dashboard"></i> Home</a></li>
-                        <li className="active">Dashboard</li>
+                        <NavLink to={`/Attendence/`+localStorage.getItem('salesmanUserID')}> <a>Attendence</a>
+                        </NavLink>
+                        <NavLink to={`/Leave/`+localStorage.getItem('salesmanUserID')}  style={{ color: "black" }}> <a>Leave Details</a>
+                        </NavLink>
+                        {localStorage.getItem('user_role') !== 'sealseman' &&
+                        <NavLink to={`/showLocation/`+localStorage.getItem('salesmanUserID')}  style={{ color: "black" }}> <a>Show location</a>
+                        </NavLink>
+                        }
                     </ol>
                 </section>
                 <section className="content">

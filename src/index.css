@@ -1,3 +1,11 @@
 .cursor-pointer{
   cursor: pointer;
 }
+.center{
+  align-items: center;
+}
+.request-for-approval-btn{
+  margin-left: 8rem;
+  margin-top: 1rem;
+  background-color: lightcoral;
+}

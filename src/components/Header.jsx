@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IP } from './Constant';
+import { NavLink } from "react-router-dom";
 function Header() {
     const [password, setPassword] = useState('')
     const [confPassword, setConfPassword] = useState('')
     const [oldPassword, setOldPassword] = useState('')
-
-
+    const [noOfRequestData,setNoOfRequestData] = useState(0)
     const logoutPopup = (id) => {
         let element = document.getElementById(id);
         element.classList.toggle('open');
@@ -88,6 +88,27 @@ function Header() {
             toast(msg);
         }
     }
+    useEffect(()=>{
+        axios.get(IP + 'ventilia-api/index.php/api/user/leave/requestForApproval', {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            if(response.data.data !== undefined){
+                setNoOfRequestData(response.data.data.length)
+            }else{
+               setNoOfRequestData(0)
+            }
+           
+        }).catch(err => {
+            console.log('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
+    },[])
     return (
         <>
             <header className="main-header">
@@ -98,6 +119,7 @@ function Header() {
                     <a href="#" className="sidebar-toggle" data-toggle="push-menu" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
+                    {localStorage.getItem("user_role") === 'admin' &&<button className="btn request-for-approval-btn"><NavLink to="RequestForApproval">Leave Approval ({noOfRequestData})</NavLink></button> }
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu" id="headrUserName" onClick={() => { logoutPopup('headrUserName') }}>
@@ -156,6 +178,20 @@ function Header() {
                     </div>
                 </div>
             </div>
+            {/* <div className="modal fade" id="requestForApproval">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"><i  className="fa fa-times" aria-hidden="true"></i></span></button>
+                            <h4 className="modal-title">Request For Approval</h4>
+                        </div>
+                        <div className="modal-body">
+                            <RequestForApproval  noOfRequestData={setNoOfRequest}/>
+                        </div>
+                    </div>
+                </div>
+            </div> */}
         </>
     )
 }

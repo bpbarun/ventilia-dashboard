@@ -55,6 +55,34 @@ function Sidebar() {
                                             </li>
                                         </NavLink>
                                     </ul>
+                                    {/* <ul className="side-bar-menu">
+                                 <NavLink to="/ShowLocation">
+                                     <li title="Locaion">
+                                         <span className="menu_title">ShowLocation</span>
+                                     </li>
+                                 </NavLink>
+                                </ul> */}
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/AttendenceCalendar">
+                                     <li title="AttendenceCalendar">
+                                         <span className="menu_title">AttendenceCalendar</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                 <ul className="side-bar-menu">
+                                 <NavLink to='/Attendence'>
+                                     <li title="Attendence">
+                                         <span className="menu_title">Attendence</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/Leave">
+                                     <li title="Leave">
+                                         <span className="menu_title">Leave</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
                                 </>
                             }
                             {role === 'technical' &&
@@ -78,14 +106,17 @@ function Sidebar() {
                                 </>
                             }
                             {role === 'admin' &&
+                            <>
                                 <ul className="side-bar-menu">
                                     <NavLink to="/Reports">
                                         <li title="Reports">
                                             <span className="menu_title">Reports</span>
                                         </li>
                                     </NavLink>
+                                    
                                 </ul>
-
+                                 
+                             </>
                             }
                         </li>
                     </ul>
