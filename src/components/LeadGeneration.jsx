@@ -4,8 +4,11 @@ import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
 import { IP } from './Constant'
-import 'ag-grid-community/styles//ag-grid.css';
-import 'ag-grid-community/styles//ag-theme-alpine.css';
+// import 'ag-grid-community/styles//ag-grid.css';
+// import 'ag-grid-community/styles//ag-theme-alpine.css';
+import '../../node_modules/ag-grid-community/styles/ag-grid.css';
+import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
+
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import UploadFile from './MyUpload';

@@ -4,11 +4,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IP } from './Constant';
 import { NavLink } from "react-router-dom";
+import Select from 'react-select';
+
 function Header() {
     const [password, setPassword] = useState('')
     const [confPassword, setConfPassword] = useState('')
     const [oldPassword, setOldPassword] = useState('')
     const [noOfRequestData,setNoOfRequestData] = useState(0)
+    const [frenchaisesOptions,setFrenchaisesOptions] = useState([])
+    const [frenchaisesOption,setFrenchaisesOption] = useState("")
+
     const logoutPopup = (id) => {
         let element = document.getElementById(id);
         element.classList.toggle('open');
@@ -109,6 +114,54 @@ function Header() {
             console.log(err);
         });
     },[])
+
+    useEffect(()=>{
+        axios.get(IP + 'ventilia-api/index.php/api/user/user/franchises/'+localStorage.getItem("user_id"), {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            if(response.data.data !== undefined){
+                setFrenchaisesOptions(response.data.data)
+                setFrenchaisesOption(response.data.data[0].is_active)
+            }else{
+              setFrenchaisesOptions([])
+            }
+           
+        }).catch(err => {
+            console.log('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
+    },[])
+    const handleFrenchaises  = (e)=>{
+        setFrenchaisesOption(e.value);
+        saveFranchaises(e.value)
+    }
+    const saveFranchaises = (id)=>{
+        let data={};
+        data={
+            is_active:id
+        }
+         axios.post(IP + 'ventilia-api/index.php/api/user/user/franchises/'+ localStorage.getItem("user_id"),data, {
+            headers: {
+                'token_code': localStorage.getItem("token_code"),
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                'Access-Control-Allow-Headers': '*'
+            }
+        }).then((response) => {
+            console.log('succecss',response);
+            notify('Franchises added sucessfully.', 'success')
+        }).catch(err => {
+            console.log('Something got wrong please try again later.', 'error')
+            console.log(err);
+        });
+    }
     return (
         <>
             <header className="main-header">
@@ -120,6 +173,38 @@ function Header() {
                         <span className="sr-only">Toggle navigation</span>
                     </a>
                     {localStorage.getItem("user_role") === 'admin' &&<button className="btn request-for-approval-btn"><NavLink to="RequestForApproval">Leave Approval ({noOfRequestData})</NavLink></button> }
+                    {localStorage.getItem("user_role") === 'sealseman_teamlead' &&
+                    <div className="navbar-custom-menu franchisesDropdown">
+                    {/* <ul className="nav navbar-nav">
+                        <li className="dropdown user user-menu" id="chooseFrenchies" onClick={() => { logoutPopup('chooseFrenchies') }}>
+                            <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+                                <i className="fa fa-user" aria-hidden="true"></i>
+                                <span>Chose Frenchaises</span>
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li className="user-body">
+                                    <div className="row">
+                                        <div className="text-center">
+                                            <a className="cursor-pointer" onClick={callLogout}>Logout</a>
+                                        </div>
+                                        <div className="text-center">
+                                            <a className="cursor-pointer" data-toggle="modal" aria-hidden="true" data-target="#changePassword">Change Password</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul> */}
+                     <Select
+                        value={frenchaisesOptions.filter(function (option) {
+                            return option.value === frenchaisesOption;
+                        })}
+                        onChange={handleFrenchaises}
+                        options={frenchaisesOptions}
+                        placeholder="Select Franchises"
+                    />
+                </div> }
+
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu" id="headrUserName" onClick={() => { logoutPopup('headrUserName') }}>

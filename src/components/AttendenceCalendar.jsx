@@ -122,7 +122,7 @@ let closeStyle = () => { //MODAL HIDE
           localizer={localizer}
           events={eventDatas}
           views={['month']} 
-          onSelectEvent={(event) => handleSelectedEvent(event)}
+         // onSelectEvent={(event) => handleSelectedEvent(event)}
           startAccessor="start"
           endAccessor="end"
           eventPropGetter={customEventStyleGetter}

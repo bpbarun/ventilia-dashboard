@@ -9,3 +9,7 @@
   margin-top: 1rem;
   background-color: lightcoral;
 }
+.franchisesDropdown{
+  float: left !important;
+  margin-top: 0.5rem;
+}

@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Reimbursement(props) {
   console.log(props.show)
-  const [selectedFile, setSelectedFile] = useState('');
+  const [selectedFile, setSelectedFile] = useState({});
   const [location, setLocation] = useState('');
   const [date, setDate] = useState('');
   const [noOfPersion, setNoOfPersion] = useState('');
@@ -27,30 +27,35 @@ function Reimbursement(props) {
     }
   }
   const onChangeHandler = (event) => {
-    console.log('aaaaaaaaaaaaaaaaaa==============',event)
     setSelectedFile(event.target.files[0]);
 };
-  const save = ()=>{
-    console.log('saave is =========')
-    const data1 = new FormData();
-        data1.append("file", selectedFile);
-        data1.append("location", location);
-        data1.append("date", date);
-        data1.append("no_of_person", noOfPersion);
-        data1.append("client_name", clientName);
-        data1.append("purpose", purpose);
-    const data = {
-      'location': location,
-      'date': date,
-      'no_of_person': noOfPersion,
-      'client_name	': clientName,
-      'purpose': purpose,
-      'user_id': localStorage.getItem("user_id"),
-      'traveing_fare': travellingBill,
-      'hotel_bill': hotelBill,
-      'meal_expeness': mealBill,
-  }
-      axios.post(IP + 'ventilia-api/index.php/api/user/reimbursement/', data1, {
+  const save = (file)=>{
+    console.log('saave is =========',selectedFile)
+    let dataFile = new FormData();
+    console.log('form data is ===',dataFile)
+        dataFile.append("files", selectedFile);
+        dataFile.append("location", location);
+        dataFile.append("date", date);
+        dataFile.append("no_of_person", noOfPersion);
+        dataFile.append("client_name", clientName);
+        dataFile.append("purpose", purpose);
+
+        const data = new FormData();
+        data.append("file", selectedFile);
+        data.append("is_active", 1);
+  //   const data = {
+  //     'location': location,
+  //     'date': date,
+  //     'no_of_person': noOfPersion,
+  //     'client_name	': clientName,
+  //     'purpose': purpose,
+  //     'user_id': localStorage.getItem("user_id"),
+  //     'traveing_fare': travellingBill,
+  //     'hotel_bill': hotelBill,
+  //     'meal_expeness': mealBill,
+  // }
+  console.log('file to save is ===',data)
+      axios.post(IP + 'ventilia-api/index.php/api/user/reimbursement/',dataFile, {
         headers: {
             'token_code': localStorage.getItem("token_code"),
             'Content-Type': 'application/json',
@@ -113,7 +118,7 @@ function Reimbursement(props) {
                                 </div>
                                 <div className="col-sm-6 col-md-6 col-xl-6">
                                 <label>Upload proof</label>
-                                <input type="file"  onChange={onChangeHandler} className="form-control"/>
+                                <input type="file"  name="travellingFair" onChange={onChangeHandler} className="form-control"/>
                                 </div>
                               </div>
                             </div>
@@ -125,7 +130,7 @@ function Reimbursement(props) {
                                 </div>
                                 <div className="col-sm-6 col-md-6 col-xl-6">
                                 <label>Upload proof</label>
-                                <input type="file"  onChange={(e) => { setPurpose  (e.target.value) }} className="form-control"/>
+                                {/* <input type="file"  onChange={(e) => { setPurpose  (e.target.value) }} className="form-control"/> */}
                                 </div>
                               </div>
                             </div>
@@ -137,7 +142,7 @@ function Reimbursement(props) {
                                 </div>
                                 <div className="col-sm-6 col-md-6 col-xl-6">
                                 <label>Upload proof</label>
-                                <input type="file"  onChange={(e) => { setPurpose  (e.target.value) }} className="form-control"/>
+                                {/* <input type="file"  onChange={(e) => { setPurpose  (e.target.value) }} className="form-control"/> */}
                                 </div>
                               </div>
                             </div>

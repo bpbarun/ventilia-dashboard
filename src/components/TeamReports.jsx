@@ -14,7 +14,7 @@ import { NavLink } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function Reports() {
+function TeamReports() {
     const [rowData, setRowData] = useState([]);
     const [graphData, setGraphData] = useState();
     const [totalLead, setTotalLead] = useState();
@@ -75,7 +75,7 @@ function Reports() {
     ]
     console.log('graphData is ==', graphData)
     useEffect(() => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getReport', {
+        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getReport/'+localStorage.getItem("user_id"), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function Reports() {
     }, [])
 
     useEffect(() => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getGrapgData/', {
+        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getGrapgData/'+localStorage.getItem("user_id"), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ function Reports() {
                     address: lead.address,
                     complete_lead_comment: lead.complete_lead_comment,
                     created_on: lead.created_on,
-                    created_by:lead.user_name
+                    created_by: lead.user_name,
                 }))) : setCompletedLeadRow([])
         }).catch(err => {
             console.log(err);
@@ -237,7 +237,7 @@ function Reports() {
             <div className="content-wrapper">
                 <section className="content-header">
                     <h1>
-                        Dashboard
+                        Team Repots
                     </h1>
                     <ol className="breadcrumb">
                         <li><a href="#"><i className="fa fa-dashboard"></i> Home</a></li>
@@ -376,4 +376,4 @@ function Reports() {
         </>
     )
 }
-export default Reports;
+export default TeamReports;

@@ -85,6 +85,60 @@ function Sidebar() {
                                 </ul>
                                 </>
                             }
+                            {role === 'sealseman_teamlead' &&
+                                <>
+                                    <ul className="side-bar-menu">
+                                    <NavLink to="/TeamReports">
+                                        <li title="My Team Report">
+                                            <span className="menu_title">My Team Report</span>
+                                        </li>
+                                    </NavLink>
+                                    </ul>
+                                    <ul className="side-bar-menu">
+                                        <NavLink to="/LeadGeneration">
+                                            <li title="Dashboard">
+                                                <span className="menu_title">Lead Generation</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
+                                    <ul className="side-bar-menu">
+                                        <NavLink to="/Opportunity">
+                                            <li title="Dashboard">
+                                                <span className="menu_title">Opprtunity Details</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
+                                    <ul className="side-bar-menu">
+                                        <NavLink to="/MyReport">
+                                            <li title="MyReport">
+                                                <span className="menu_title">MyReport</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
+                                  
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/AttendenceCalendar">
+                                     <li title="AttendenceCalendar">
+                                         <span className="menu_title">AttendenceCalendar</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                 <ul className="side-bar-menu">
+                                 <NavLink to='/Attendence'>
+                                     <li title="Attendence">
+                                         <span className="menu_title">Attendence</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/Leave">
+                                     <li title="Leave">
+                                         <span className="menu_title">Leave</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                </>
+                            }
                             {role === 'technical' &&
                                 <>
                                     <ul className="side-bar-menu">

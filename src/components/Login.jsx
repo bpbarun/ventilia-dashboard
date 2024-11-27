@@ -22,7 +22,7 @@ function Login(props) {
             user: userName,
             password: password
         }
-        axios.post(IP + 'ventilia-api/index.php/api/login/login', data, {
+        axios.post(IP + 'ventilia-api/api/login/login', data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -41,7 +41,10 @@ function Login(props) {
                 window.location = "/QuotationUpload";
             } else if (response.data.data.user_role === 'sealseman') {
                 window.location = "/LeadGeneration";
-            } else {
+            }else if(response.data.data.user_role === 'sealseman_teamlead') {
+                window.location = "/TeamReports";
+            }
+             else {
                 window.location = "/Reports";
             }
         }).catch(err => {

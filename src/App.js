@@ -18,6 +18,7 @@ import AttendenceCalendar from './components/AttendenceCalendar';
 import Attendence from './components/Attendence';
 import Leave from './components/Leave';
 import RequestForApproval from './components/RequestForApproval';
+import TeamReports from './components/TeamReports';
 import { IP } from './components/Constant';
 import './index.css'
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/Leave/:id" element={<Leave />} />
           <Route path="/Leave" element={<Leave />} />
           <Route path="/RequestForApproval" element={<RequestForApproval />} />
+          <Route path="/TeamReports" element={<TeamReports />} />
         </Routes>
       </>
     )
