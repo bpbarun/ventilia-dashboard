@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './leadGeneration.scss';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -62,7 +59,7 @@ function TeamReports() {
     const columnDefs = [
         {
             headerName: "#", field: "id",
-            cellRenderer: "LinkComponent"
+            cellRenderer: LinkComponent
         },
         { headerName: "SalesMan Name", field: "sealsman" },
         { headerName: "Lead", field: "total_lead" },

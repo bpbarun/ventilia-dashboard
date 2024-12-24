@@ -1,10 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { AgGridReact } from 'ag-grid-react';
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import axios from 'axios';
 import './leadGeneration.scss';
 import { IP } from './Constant'
@@ -100,7 +97,7 @@ function Leave() {
         { headerName: "Requested On", field: "created_on" },
         {
             headerName: "Edit", field: "editLeave",
-            cellRenderer: "editLeave",
+            cellRenderer: editLeave,
         },
     ]
     const onGridReady=(params)=>{

@@ -52,6 +52,7 @@ function App() {
           <Route path="/Reports" element={<Reports />} />
           <Route path="/Opportunity" element={<Opportunity />} />
           <Route path="/MyReport" element={<MyReport />} />
+          <Route path="/MyReport/:id" element={<MyReport />} />
           <Route path="/ShowLocation/:id" element={<ShowLocation />} />
           <Route path="/ShowLocation" element={<ShowLocation />} />
           <Route path="/AttendenceCalendar" element={<AttendenceCalendar />} />

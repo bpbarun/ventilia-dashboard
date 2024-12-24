@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './leadGeneration.scss';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { IP } from './Constant';
-import { NavLink } from "react-router-dom";
+import { NavLink,useParams } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -27,8 +24,9 @@ function MyReport() {
     const [quotationRow, setQuotationRow] = useState([]);
     const [cancelLeadRow, setCancelLeadRow] = useState([]);
     const [completedLeadRow, setCompletedLeadRow] = useState([]);
+    const { id } = useParams();
+    const [gridApi, setgridApi] = useState([]);
 
-        
     const data = {
         labels: ['10%', '20%', '40%', '60%', '80%'],
         datasets: [
@@ -67,7 +65,7 @@ function MyReport() {
         { headerName: "Average Price", field: "averageprice" },
         {
             headerName: "View Quotation", field: "viewquotation",
-            cellRenderer: "LinkComponentImage",
+            cellRenderer: LinkComponentImage,
         },
         { headerName: "Offer Price", field: "offerprice" },
         { headerName: "GST", field: "gst" },
@@ -75,15 +73,17 @@ function MyReport() {
         { headerName: "Close Date", field: "close_date" },
         {
             headerName: "Create Offer", field: "createoffer",
-            cellRenderer: "CreateOffer",
+            cellRenderer: CreateOffer,
         },
         {
             headerName: "Lead Comment", field: "leadcomment",
-            cellRenderer: "showComment",
+            cellRenderer: showComment,
         }
     ];
-    const fetchData = () => {
-        axios.get(IP + 'ventilia-api/index.php/api/leadGeneration/leadGeneration/getUseLeadData/' + localStorage.getItem('salesmanUserID'), {
+    const fetchData = (id=0) => {
+        let url = id?'ventilia-api/index.php/api/leadGeneration/leadGeneration/getUseLeadData/' + id:
+        'ventilia-api/index.php/api/leadGeneration/leadGeneration/getUseLeadData/' + localStorage.getItem('salesmanUserID')
+        axios.get(IP + url, {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -121,9 +121,12 @@ function MyReport() {
     useEffect(() => {
         fetchData();
     }, []);
+    useEffect(() => {
+        fetchData(id);
+    }, [id]);
 
     useEffect(() => {
-        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getGrapgData/' + localStorage.getItem('salesmanUserID'), {
+        axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getMyGraphData/' + localStorage.getItem('salesmanUserID'), {
             headers: {
                 'token_code': localStorage.getItem("token_code"),
                 'Content-Type': 'application/json',
@@ -140,6 +143,28 @@ function MyReport() {
         }).catch(err => console.log('response catch', err));
 
     }, [])
+    useEffect(() => {
+        if(id){
+            localStorage.setItem('salesmanUserID',id)
+            axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getMyGraphData/' + id, {
+                headers: {
+                    'token_code': localStorage.getItem("token_code"),
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                    'Access-Control-Allow-Headers': '*'
+                }
+            }).then((response) => {
+                setGraphData(response.data.data.graph)
+                setTotalLead(response.data.data.tiles.total_lead)
+                setActiveLead(response.data.data.tiles.active_lead)
+                setCompletedLead(response.data.data.tiles.completed_lead)
+                setCancelLead(response.data.data.tiles.cancel_lead)
+            }).catch(err => console.log('response catch', err));
+    
+        }
+        
+    }, [id])
     function LinkComponentImage(props) {
         return (
             <a onClick={() => getQuotationData(props.value)} data-toggle="modal" data-target="#showQuotation">Show Quotation</a>
@@ -237,7 +262,7 @@ function MyReport() {
             { headerName: "Active", field: "active" },
             {
                 headerName: "View", field: "quotation",
-                cellRenderer: "quotationImage",
+                cellRenderer: quotationImage,
             },
             { headerName: "Created On", field: "created_on" },
             { headerName: "Total Area", field: "totalarea" },
@@ -437,6 +462,14 @@ function MyReport() {
             </>
         )
     }
+    const onGridReady=(params)=>{
+        // gridApi=params.api
+        setgridApi(params.api)
+        }
+        const onExportClick=()=>{
+        gridApi.exportDataAsCsv();
+        // gridApi.exportDataAsExcel()
+        }
     return (
         <>
             <div className="content-wrapper">
@@ -501,6 +534,12 @@ function MyReport() {
                     <div className="row">
                         <section className="col-lg-7 connectedSortable">
                             <div className="nav-tabs-custom">
+                            <button className="btn btn-block btn-primary"
+                                    onClick={()=>{onExportClick()}}
+                                    style={{ width: "7rem", fontWeight: "bold" }}
+                                >
+                                    Export
+                                </button>
                                 <div className="tab-content no-padding">
                                     <div className="chart tab-pane active" id="sales-chart">
                                         <div
@@ -518,9 +557,11 @@ function MyReport() {
                                                 }}
                                                 pagination
                                                 paginationPageSize={10}
+                                                paginationPageSizeSelector={[100,200, 500]}
                                                 suppressRowTransform={true}
                                                 columnDefs={columnDefs}
                                                 rowData={rowData}
+                                                onGridReady={onGridReady}
                                                 frameworkComponents={{
                                                     LinkComponentImage,
                                                     CreateOffer,

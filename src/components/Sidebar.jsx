@@ -25,7 +25,6 @@ function Sidebar() {
     useEffect(() => {
         fetchData();
     }, []);
-
     return (
         <>
             <aside className="main-sidebar">
@@ -109,7 +108,7 @@ function Sidebar() {
                                         </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
-                                        <NavLink to="/MyReport">
+                                        <NavLink to={`/MyReport/`+localStorage.getItem('user_id')}>
                                             <li title="MyReport">
                                                 <span className="menu_title">MyReport</span>
                                             </li>

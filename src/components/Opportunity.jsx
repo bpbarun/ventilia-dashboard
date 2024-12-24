@@ -4,11 +4,8 @@ import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
 import { IP } from './Constant'
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import UploadFile from './MyUpload';
@@ -38,6 +35,7 @@ function Opportunity() {
     const [showLetter, setShowLetter] = useState(false);
     const [gstOption,setGstOption] = useState(null);
     const [showExtra, setShowExtra] = useState(false);
+    const [gridApi, setgridApi] = useState([]);
 
    
     const notify = (msg, type) => {
@@ -268,21 +266,21 @@ function Opportunity() {
         { headerName: "Name", field: "name" },
         { headerName: "Mobile", field: "mobile" },
         { headerName: "Address", field: "address" },
-        // { headerName: "Refrence", field: "refrence" },
+        { headerName: "Refrence", field: "refrence" },
         { headerName: "Meeting Date", field: "meeting_date" },
 
         // { headerName: "Site Stage", field: "sitestage" },
         { headerName: "Created Date", field: "created_date" },
         {
             headerName: "Upload", field: "upload",
-            cellRenderer: "LinkComponent",
+            cellRenderer: LinkComponent,
         },
         { headerName: "Total Area", field: "totalarea" },
         { headerName: "Total Unit", field: "totalunit" },
         { headerName: "Average Price", field: "averageprice" },
         {
             headerName: "View Quotation", field: "viewquotation",
-            cellRenderer: "LinkComponentImage",
+            cellRenderer: LinkComponentImage,
         },
         { headerName: "Offer Price", field: "offerprice" },
         { headerName: "GST", field: "gst" },
@@ -290,16 +288,16 @@ function Opportunity() {
         { headerName: "Close Date", field: "close_date" },
         {
             headerName: "Create Offer", field: "createoffer",
-            cellRenderer: "CreateOffer",
+            cellRenderer: CreateOffer,
         },
         {
             headerName: "Lead Comment", field: "leadcomment",
-            cellRenderer: "showComment",
+            cellRenderer: showComment,
         },
         {
             headerName: "More Action",
             field: "moreaction",
-            cellRenderer: "CreateMoreAction",
+            cellRenderer: CreateMoreAction,
             cellStyle: { 'height': '20rem' },
         },
     ];
@@ -388,7 +386,7 @@ function Opportunity() {
                 name: leadData.client_name,
                 mobile: leadData.mobile,
                 address: leadData.address,
-                // refrence: leadData.refrence,
+                refrence: leadData.refrence,
                 meeting_date: leadData.meeting_date,
                 // sitestage: leadData.site_stage,
                 created_date: leadData.created_on,
@@ -505,12 +503,12 @@ function Opportunity() {
         const quotationColumn = [
             {
                 headerName: "Select", field: "select",
-                cellRenderer: "selectOpportunity",
+                cellRenderer: selectOpportunity,
             },
             { headerName: "Active", field: "active" },
             {
                 headerName: "View", field: "quotation",
-                cellRenderer: "quotationImage",
+                cellRenderer: quotationImage,
             },
             { headerName: "Created On", field: "created_on" },
             { headerName: "Total Area", field: "totalarea" },
@@ -617,6 +615,14 @@ function Opportunity() {
     const handleGstValue = (e)=>{
         setGstOption(e.value)
     }
+    const onGridReady=(params)=>{
+    // gridApi=params.api
+    setgridApi(params.api)
+    }
+    const onExportClick=()=>{
+    gridApi.exportDataAsCsv();
+    // gridApi.exportDataAsExcel()
+    }
     return (
         <>
             <div className="content-wrapper leadGeneration-content">
@@ -625,6 +631,14 @@ function Opportunity() {
                         <div className="box">
                             <div className="box-header">
                                 <h3 className="box-title">Lead Opportunnity Detail</h3>
+                            </div>
+                            <div className="top-right-btn">  
+                                <button className="btn btn-block btn-primary"
+                                    onClick={()=>{onExportClick()}}
+                                    style={{ marginBottom: "5px", fontWeight: "bold" }}
+                                >
+                                    Export
+                                </button>
                             </div>
                             <div className="box-body">
                                 <div
@@ -642,9 +656,11 @@ function Opportunity() {
                                         }}
                                         pagination
                                         paginationPageSize={10}
+                                        paginationPageSizeSelector={[100,200, 500]}
                                         suppressRowTransform={true}
                                         columnDefs={columnDefs}
                                         rowData={rowData}
+                                        onGridReady={onGridReady}
                                         frameworkComponents={{
                                             LinkComponent,
                                             LinkComponentImage,

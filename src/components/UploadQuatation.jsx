@@ -3,11 +3,8 @@ import { useParams } from "react-router-dom";
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import { IP } from './Constant';
@@ -120,19 +117,19 @@ function UploadQuatation() {
         { headerName: "Site Stage", field: "sitestage" },
         {
             headerName: "View Document", field: "viewDocument",
-            cellRenderer: "LinkComponent",
+            cellRenderer: LinkComponent,
         },
         {
             headerName: "Upload Quotation", field: "uploadQuotation",
-            cellRenderer: "linkUploadQuotation"
+            cellRenderer: linkUploadQuotation
         },
         {
             headerName: "Lead Comment", field: "leadcomment",
-            cellRenderer: "showComment",
+            cellRenderer: showComment,
         },
         {
             headerName: "View Uploaded Quotation", field: "viewuploadQuotation",
-            cellRenderer: "linkViewUploadQuotation"
+            cellRenderer: linkViewUploadQuotation
         }
     ];
     const [rowData, setRowData] = useState([]);
@@ -284,14 +281,14 @@ function UploadQuatation() {
             { headerName: "Active", field: "active" },
             {
                 headerName: "View", field: "quotation",
-                cellRenderer: "quotationImage",
+                cellRenderer: quotationImage,
             },
             { headerName: "Created On", field: "created_on" },
             { headerName: "Total Area", field: "totalarea" },
             { headerName: "Total Unit", field: "totalunit" },
             { headerName: "Average Price", field: "averageprice" },
             { headerName: "Delete", field: "delete",
-                cellRenderer:"deleteQuotation" },
+                cellRenderer:deleteQuotation},
 
         ]
         return (

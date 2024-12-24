@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 import { IP } from './Constant';
 
@@ -44,7 +42,7 @@ function ShowLeadAssets(props) {
     { headerName: "File name", field: "file_name" },
     {
       headerName: "View", field: "view",
-      cellRenderer: "LeadImage",
+      cellRenderer: LeadImage,
     }
   ]
 

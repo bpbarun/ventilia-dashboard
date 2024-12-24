@@ -40,7 +40,7 @@ const CreatPdf = forwardRef((props, ref) => {
                 setGst(18)
                 setGstType('gst')
             }else if(response.data.data[0].gst === '*'){
-                setGst(76.5)
+                setGst(81)
                 setGstType('value')
             }else{
                 setGst(response.data.data[0].gst)

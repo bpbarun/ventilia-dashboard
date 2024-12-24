@@ -4,11 +4,8 @@ import axios from 'axios';
 import { AgGridReact } from 'ag-grid-react';
 import { toast } from 'react-toastify';
 import { IP } from './Constant'
-// import 'ag-grid-community/styles//ag-grid.css';
-// import 'ag-grid-community/styles//ag-theme-alpine.css';
-import '../../node_modules/ag-grid-community/styles/ag-grid.css';
-import '../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
-
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './leadGeneration.scss';
 import UploadFile from './MyUpload';
@@ -184,19 +181,19 @@ function LeadGeneration() {
         { headerName: "Created Date", field: "created_date" },
         {
             headerName: "Upload", field: "upload",
-            cellRenderer: "LinkComponent",
+            cellRenderer: LinkComponent,
         },
         {
             headerName: "View Quotation", field: "viewquotation",
-            cellRenderer: "LinkComponentImage",
+            cellRenderer: LinkComponentImage,
         },
         {
             headerName: "Lead Comment", field: "leadcomment",
-            cellRenderer: "showComment",
+            cellRenderer: showComment,
         },
         {
             headerName: "Action", field: "edit_lead",
-            cellRenderer: "LinkComponentEditLead",
+            cellRenderer: LinkComponentEditLead,
         },
     ];
     const handleClientName = (e) => {
@@ -383,12 +380,12 @@ function LeadGeneration() {
         const quotationColumn = [
             {
                 headerName: "Select", field: "select",
-                cellRenderer: "selectOpportunity",
+                cellRenderer: selectOpportunity,
             },
             { headerName: "Active", field: "active" },
             {
                 headerName: "View", field: "quotation",
-                cellRenderer: "quotationImage",
+                cellRenderer: quotationImage,
             },
             { headerName: "Created On", field: "created_on" },
             { headerName: "Total Area", field: "totalarea" },
