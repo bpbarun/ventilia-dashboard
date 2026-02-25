@@ -111,8 +111,8 @@ function UploadQuatation() {
     }
     const columnDefs = [
         { headerName: "Name", field: "name" },
-        { headerName: "Mobile", field: "mobile" },
-        { headerName: "Address", field: "address" },
+        // { headerName: "Mobile", field: "mobile" },
+        // { headerName: "Address", field: "address" },
         { headerName: "Refrence", field: "refrence" },
         { headerName: "Site Stage", field: "sitestage" },
         {
@@ -147,8 +147,8 @@ function UploadQuatation() {
             if (response.data.status) {
                 setRowData(response.data.data.map((leadData) => ({
                     name: leadData.client_name,
-                    mobile: leadData.mobile,
-                    address: leadData.address,
+                    // mobile: leadData.mobile,
+                    // address: leadData.address,
                     refrence: leadData.refrence,
                     sitestage: leadData.site_stage,
                     uploadQuotation: leadData.lead_id,
