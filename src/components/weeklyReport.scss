@@ -1,0 +1,69 @@
+.custom-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  } 
+  .custom-drawer {
+    position: fixed;
+    top: 0;
+    right: -400px; /* hidden */
+    width: 400px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    overflow-y: auto;
+  }  
+  .custom-drawer.open {
+    right: 0;
+  }
+  .weekly-report-btn{
+    background-color: #458dbc !important;
+    margin: 4px 4px 1px 0px;
+    color: #fff;
+  }
+  .weekly-result-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
+    padding: 18px 25px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.kpi-item {
+    text-align: center;
+}
+
+.kpi-title {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.kpi-total {
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 4px;
+    opacity: 0.9;
+}
+
+.kpi-divider {
+    width: 1px;
+    height: 35px;
+    background: rgba(255,255,255,0.4);
+}

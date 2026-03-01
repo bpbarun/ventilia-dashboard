@@ -9,7 +9,27 @@
   margin-top: 1rem;
   background-color: lightcoral;
 }
+.header-weeklyreport-btn{
+  margin-left: 8rem;
+  margin-top: 1rem;
+  background-color: rgb(255, 255, 255);
+}
 .franchisesDropdown{
   float: left !important;
   margin-top: 0.5rem;
 }
+li {
+  list-style: none;
+}
+.weekly-report-button{
+  display: flex;
+}
+.weeklyReportBtn{
+  float: right;
+  margin-top: 0px !important;
+  margin-left: 0.5rem;
+}
+.content-header h1{
+  margin-bottom: 1rem;
+}
+

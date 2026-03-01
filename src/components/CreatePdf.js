@@ -80,7 +80,7 @@ const CreatPdf = forwardRef((props, ref) => {
                                 <div>
                                     <img className='offer-logo'src="../assets/dist/img/logo1.png" alt="logo image" />
                                 </div>
-                                <h2>OFFER-LETTER</h2>
+                                <h3>OFFER-LETTER</h3>
                             </div>
                             <div className="right">
                                 DATE:{today.format('DD/MM/YYYY')}
@@ -95,7 +95,7 @@ const CreatPdf = forwardRef((props, ref) => {
                             <br></br>
                             <p>We are pleased to offer you our best rates for supply and fitting of uPVC windows and door system. Below are the following terms and conditions on which we proceed further—</p>
                             <div className="terms-and-conditions">
-                                <h2>Terms and Conditions:</h2>
+                                <h4>Terms and Conditions:</h4>
                                 <ol>
                                     <li>Final Offer rate on Dated-{today.format('DD/MM/YYYY')} is Rs.{offerPrice}/- including Installation.</li>
                                     <li>Additional GST is applicable on Total Material cost.</li>
@@ -114,7 +114,7 @@ const CreatPdf = forwardRef((props, ref) => {
                                 </ol>
                             </div>
                             <div className="specifications">
-                                <h2>Specifications of uPVC window:</h2>
+                                <h4>Specifications of uPVC window:</h4>
                                 <table className="table">
                                     <tr>
                                         <th>Particular</th>
@@ -138,6 +138,14 @@ const CreatPdf = forwardRef((props, ref) => {
                                     </tr>
                                 </table>
                                 <br className='mynewpage'></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
                                 <br></br>
                                 <br></br>
                                 <br></br>

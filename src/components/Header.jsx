@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IP } from './Constant';
-import { NavLink } from "react-router-dom";
+import { useLocation,NavLink } from "react-router-dom";
 import Select from 'react-select';
 
 function Header() {
@@ -13,7 +13,7 @@ function Header() {
     const [noOfRequestData,setNoOfRequestData] = useState(0)
     const [frenchaisesOptions,setFrenchaisesOptions] = useState([])
     const [frenchaisesOption,setFrenchaisesOption] = useState("")
-
+    const location = useLocation();
     const logoutPopup = (id) => {
         let element = document.getElementById(id);
         element.classList.toggle('open');
@@ -172,29 +172,19 @@ function Header() {
                     <a href="#" className="sidebar-toggle" data-toggle="push-menu" role="button">
                         <span className="sr-only">Toggle navigation</span>
                     </a>
-                    {localStorage.getItem("user_role") === 'admin' &&<button className="btn request-for-approval-btn"><NavLink to="RequestForApproval">Leave Approval ({noOfRequestData})</NavLink></button> }
+                    {localStorage.getItem("user_role") === 'admin' &&
+                        <button className="btn request-for-approval-btn">
+                            <NavLink to="RequestForApproval">Leave Approval ({noOfRequestData})</NavLink>
+                        </button> 
+                    }
+                    {location.pathname.includes("MyReport") && (
+
+                        <button className="btn header-weeklyreport-btn">
+                            <NavLink to="WeeklyReport">Weekly Meeting Report</NavLink>
+                        </button> 
+                    )}
                     {localStorage.getItem("user_role") === 'sealseman_teamlead' &&
                     <div className="navbar-custom-menu franchisesDropdown">
-                    {/* <ul className="nav navbar-nav">
-                        <li className="dropdown user user-menu" id="chooseFrenchies" onClick={() => { logoutPopup('chooseFrenchies') }}>
-                            <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                                <i className="fa fa-user" aria-hidden="true"></i>
-                                <span>Chose Frenchaises</span>
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li className="user-body">
-                                    <div className="row">
-                                        <div className="text-center">
-                                            <a className="cursor-pointer" onClick={callLogout}>Logout</a>
-                                        </div>
-                                        <div className="text-center">
-                                            <a className="cursor-pointer" data-toggle="modal" aria-hidden="true" data-target="#changePassword">Change Password</a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul> */}
                      <Select
                         value={frenchaisesOptions.filter(function (option) {
                             return option.value === frenchaisesOption;

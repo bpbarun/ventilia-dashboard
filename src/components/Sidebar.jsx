@@ -36,21 +36,21 @@ function Sidebar() {
                                     <ul className="side-bar-menu">
                                         <NavLink to="/LeadGeneration">
                                             <li title="Dashboard">
-                                                <span className="menu_title">Lead Generation</span>
+                                                <span className="menu_title"><i class="fa fa-tasks" aria-hidden="true"></i> Lead Generation</span>
                                             </li>
                                         </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
                                         <NavLink to="/Opportunity">
                                             <li title="Dashboard">
-                                                <span className="menu_title">Opprtunity Details</span>
+                                                <span className="menu_title"><i class="fa fa-credit-card" aria-hidden="true"></i> Opprtunity Details</span>
                                             </li>
                                         </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
                                         <NavLink to="/MyReport">
                                             <li title="MyReport">
-                                                <span className="menu_title">MyReport</span>
+                                            <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
                                             </li>
                                         </NavLink>
                                     </ul>
@@ -64,21 +64,21 @@ function Sidebar() {
                                 <ul className="side-bar-menu">
                                  <NavLink to="/AttendenceCalendar">
                                      <li title="AttendenceCalendar">
-                                         <span className="menu_title">AttendenceCalendar</span>
+                                         <span className="menu_title"><i class="fa fa-calendar" aria-hidden="true"></i> AttendenceCalendar</span>
                                      </li>
                                  </NavLink>
                                 </ul>
                                  <ul className="side-bar-menu">
                                  <NavLink to='/Attendence'>
                                      <li title="Attendence">
-                                         <span className="menu_title">Attendence</span>
+                                         <span className="menu_title"><i class="fa fa-address-book" aria-hidden="true"></i>  Attendence</span>
                                      </li>
                                  </NavLink>
                                 </ul>
                                 <ul className="side-bar-menu">
                                  <NavLink to="/Leave">
                                      <li title="Leave">
-                                         <span className="menu_title">Leave</span>
+                                         <span className="menu_title"><i class="fa fa-suitcase" aria-hidden="true"></i> Leave</span>
                                      </li>
                                  </NavLink>
                                 </ul>
@@ -89,28 +89,28 @@ function Sidebar() {
                                     <ul className="side-bar-menu">
                                     <NavLink to="/TeamReports">
                                         <li title="My Team Report">
-                                            <span className="menu_title">My Team Report</span>
+                                            <span className="menu_title"><i class="fa fa-users" aria-hidden="true"></i> My Team Report</span>
                                         </li>
                                     </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
                                         <NavLink to="/LeadGeneration">
                                             <li title="Dashboard">
-                                                <span className="menu_title">Lead Generation</span>
+                                                <span className="menu_title"><i class="fa fa-tasks" aria-hidden="true"></i> Lead Generation</span>
                                             </li>
                                         </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
                                         <NavLink to="/Opportunity">
                                             <li title="Dashboard">
-                                                <span className="menu_title">Opprtunity Details</span>
+                                                <span className="menu_title"><i class="fa fa-credit-card" aria-hidden="true"></i> Opprtunity Details</span>
                                             </li>
                                         </NavLink>
                                     </ul>
                                     <ul className="side-bar-menu">
                                         <NavLink to={`/MyReport/`+localStorage.getItem('user_id')}>
                                             <li title="MyReport">
-                                                <span className="menu_title">MyReport</span>
+                                                <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
                                             </li>
                                         </NavLink>
                                     </ul>
@@ -118,21 +118,21 @@ function Sidebar() {
                                 <ul className="side-bar-menu">
                                  <NavLink to="/AttendenceCalendar">
                                      <li title="AttendenceCalendar">
-                                         <span className="menu_title">AttendenceCalendar</span>
+                                         <span className="menu_title"><i class="fa fa-calendar" aria-hidden="true"></i> AttendenceCalendar</span>
                                      </li>
                                  </NavLink>
                                 </ul>
                                  <ul className="side-bar-menu">
                                  <NavLink to='/Attendence'>
                                      <li title="Attendence">
-                                         <span className="menu_title">Attendence</span>
+                                         <span className="menu_title"><i class="fa fa-address-book" aria-hidden="true"></i> Attendence</span>
                                      </li>
                                  </NavLink>
                                 </ul>
                                 <ul className="side-bar-menu">
                                  <NavLink to="/Leave">
                                      <li title="Leave">
-                                         <span className="menu_title">Leave</span>
+                                         <span className="menu_title"><i class="fa fa-suitcase" aria-hidden="true"></i> Leave</span>
                                      </li>
                                  </NavLink>
                                 </ul>
@@ -163,7 +163,7 @@ function Sidebar() {
                                 <ul className="side-bar-menu">
                                     <NavLink to="/Reports">
                                         <li title="Reports">
-                                            <span className="menu_title">Reports</span>
+                                            <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> Reports</span>
                                         </li>
                                     </NavLink>
                                     
