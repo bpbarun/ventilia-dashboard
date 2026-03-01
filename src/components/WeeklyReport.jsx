@@ -10,8 +10,8 @@ import './weeklyReport.scss'
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const today = new Date().getDay(); 
-// const isMonday = today === 1;
-const isMonday = today === 0;
+const isMonday = today === 1;
+// const isMonday = today === 0;
 
 function WeeklyReport() {
     const [open, setOpen] = useState(false);
