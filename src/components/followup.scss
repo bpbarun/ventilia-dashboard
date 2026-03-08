@@ -1,0 +1,77 @@
+.followup-page {
+    padding: 20px;
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .tabs {
+      margin: 15px 0;
+  
+      button {
+        margin-right: 10px;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+  
+      .active {
+        background: #1976d2;
+        color: white;
+      }
+    }
+  
+    table {
+      width: 100%;
+      border-collapse: collapse;
+  
+      th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+    }
+  
+    .badge {
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+  
+      &.pending {
+        background: orange;
+        color: white;
+      }
+  
+      &.completed {
+        background: green;
+        color: white;
+      }
+    }
+  }
+  
+  /* Drawer */
+  .drawer {
+    position: fixed;
+    top: 3rem;
+    right: 0;
+    width: 350px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  
+    .drawer-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+  
+      input, select, textarea {
+        margin-bottom: 10px;
+        padding: 8px;
+      }
+  
+      .actions {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }

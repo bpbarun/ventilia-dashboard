@@ -7,6 +7,7 @@ import {
 function Sidebar() {
     const role = localStorage.getItem("user_role");
     const [sealseman, setSealseman] = useState([]);
+    const [followUpCount, setFollowUpCount] = useState("");
     const fetchData = () => {
         axios.get(IP + 'ventilia-api/index.php/api/user/user/technicalsidebar/'+localStorage.getItem("user_id"), {
             headers: {
@@ -25,6 +26,24 @@ function Sidebar() {
     useEffect(() => {
         fetchData();
     }, []);
+    useEffect(() => {
+        let url = 'ventilia-api/api/leadGeneration/followUp/getTodayFollowups/'+localStorage.getItem('salesmanUserID')
+            axios.get(IP + url, {
+                headers: {
+                    'token_code': localStorage.getItem("token_code"),
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                    'Access-Control-Allow-Headers': '*'
+                }
+            }).then((response) => {
+                if(response.data.status){
+                    setFollowUpCount(response.data.data.length)
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }, [localStorage.getItem('salesmanUserID')]);
     return (
         <>
             <aside className="main-sidebar">
@@ -82,6 +101,13 @@ function Sidebar() {
                                      </li>
                                  </NavLink>
                                 </ul>
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/FollowUp">
+                                     <li title="Leave">
+                                         <span className="menu_title"><i class="fa fa-phone" aria-hidden="true"></i> FollowUp<b>({followUpCount})</b></span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
                                 </>
                             }
                             {role === 'sealseman_teamlead' &&
@@ -133,6 +159,13 @@ function Sidebar() {
                                  <NavLink to="/Leave">
                                      <li title="Leave">
                                          <span className="menu_title"><i class="fa fa-suitcase" aria-hidden="true"></i> Leave</span>
+                                     </li>
+                                 </NavLink>
+                                </ul>
+                                <ul className="side-bar-menu">
+                                 <NavLink to="/FollowUp">
+                                     <li title="Leave">
+                                         <span className="menu_title"><i class="fa fa-phone" aria-hidden="true"></i> FollowUp<b>({followUpCount})</b></span>
                                      </li>
                                  </NavLink>
                                 </ul>

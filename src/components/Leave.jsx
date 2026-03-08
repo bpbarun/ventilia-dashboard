@@ -191,15 +191,15 @@ function Leave() {
 ]
     return (
         <>
-            <div className="content-wrapper">
-                <button data-toggle="modal" data-target="#applyLeaveModal">Apply Leave</button>
+        <div className="content-wrapper">
+            <button style={{marginTop:'1rem'}} data-toggle="modal" data-target="#applyLeaveModal">Apply Leave</button>
             <button
             onClick={()=>{onExportClick()}}
-            style={{ marginBottom: "5px", fontWeight: "bold" }}
+            style={{ marginBottom: "5px", fontWeight: "bold", marginTop:'1rem'}}
           >
             Export to CSV
           </button>
-          <button data-toggle="modal" data-target="#holidayListModal">Holiday List</button>
+          <button style={{marginTop:'1rem'}} data-toggle="modal" data-target="#holidayListModal">Holiday List</button>
             {/* {attendenceTable} */}
             <section className="content">
                     <div className="row">

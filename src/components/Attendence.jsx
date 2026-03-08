@@ -142,10 +142,10 @@ function Attendence() {
     return (
         <>
             <div className="content-wrapper">
-                <button onClick={todayAttendence}>Apply for today Attendence</button>
+                <button  style={{marginTop:'1rem'}} onClick={todayAttendence}>Apply for today Attendence</button>
             <button
             onClick={()=>{onExportClick()}}
-            style={{ marginBottom: "5px", fontWeight: "bold" }}
+            style={{ marginBottom: "5px", fontWeight: "bold",marginTop:'1rem' }}
           >
             Export to CSV
           </button>

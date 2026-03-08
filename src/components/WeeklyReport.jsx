@@ -12,7 +12,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const today = new Date().getDay(); 
 const isMonday = today === 1;
 // const isMonday = today === 0;
-
 function WeeklyReport() {
     const [open, setOpen] = useState(false);
     const [rowData, setRowData] = useState([]);
@@ -26,7 +25,7 @@ function WeeklyReport() {
     });
     const [savedPromiseData, setSavedPromiseData] = useState([]);
     const [savedActualData, setSavedActualData] = useState([]);
-
+    const [followUpData,setFollowUpData] = useState([]);
     const [filters, setFilters] = useState({
         status: "",
         dateFrom: null,
@@ -51,6 +50,7 @@ function WeeklyReport() {
         fetchLeadData(week.from, week.to);
         fetchOpportunityData(week.from, week.to);
         completeLeadData(week.from, week.to);
+        fetchFollowups(week.from, week.to);
     }, []);
     const fetchLeadData = (fromDate = null, toDate = null) => {
         let postData={
@@ -250,6 +250,43 @@ function WeeklyReport() {
         })
         .catch(err => console.log(err));
     };
+
+    const fetchFollowups = (fromDate = null, toDate = null) => {
+        let postData={
+            from: fromDate,
+            to: toDate
+        }
+        axios.post(
+            IP + `ventilia-api/index.php/api/leadGeneration/leadGeneration/getWeeklyFollowup/${localStorage.getItem('salesmanUserID')}`,postData,{
+                headers: {
+                    'token_code': localStorage.getItem("token_code"),
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                    'Access-Control-Allow-Headers': '*'
+                }
+            }
+        )
+        .then((response) => {
+            if (response.data.status) {
+                setFollowUpData(response?.data?.data.map((data) => ({
+                    lead_name:data?.lead_name,
+                    followup_date:data?.followup_date,
+                    status:data?.status,
+                    remarks:data?.remarks
+                })));
+            } else {
+                setFollowUpData([]);
+            }
+        })
+        .catch(err => console.log(err));
+    };
+    const folloupColumn = [
+        { headerName: "Lead Name", field: "lead_name" },
+        { headerName: "followup_date", field: "followup_date" },
+        { headerName: "status", field: "status" },
+        { headerName: "remarks", field: "remarks" }
+    ]
     return (
         <>
             <div className="content-wrapper">
@@ -360,6 +397,7 @@ function WeeklyReport() {
                             fetchLeadData(week.from, week.to)
                             fetchOpportunityData(week.from, week.to)
                             completeLeadData(week.from, week.to);
+                            fetchFollowups(week.from, week.to);
 
                         }}
                     >
@@ -371,6 +409,7 @@ function WeeklyReport() {
                             fetchLeadData(filters.dateFrom, filters.dateTo);
                             fetchOpportunityData(filters.dateFrom, filters.dateTo)
                             completeLeadData(filters.dateFrom, filters.dateTo);
+                            fetchFollowups(filters.dateFrom, filters.dateTo);
                             setOpen(false);
                         }}
                     >
@@ -385,7 +424,7 @@ function WeeklyReport() {
                             <h3 className="box-title">New Hunting</h3>
                             </div>
                             <div className="box-body chart-responsive">
-                            <div className="chart" id="revenue-chart" style={{height: '300px'}}>
+                            <div className="chart" id="revenue-chart" style={{height: '313px'}}>
                             <div
                                 className="ag-theme-alpine table"
                                 style={{
@@ -418,7 +457,7 @@ function WeeklyReport() {
                             <h3 className="box-title">Follow up</h3>
                             </div>
                             <div className="box-body chart-responsive">
-                            <div className="chart" id="sales-chart" style={{height: '300px',position:'relative'}} >
+                            <div className="chart" id="sales-chart" style={{height: '313px',position:'relative'}} >
                             <div
                                 className="ag-theme-alpine table"
                                 style={{
@@ -435,11 +474,8 @@ function WeeklyReport() {
                                     pagination
                                     paginationPageSize={10}
                                     suppressRowTransform={true}
-                                    columnDefs={[]}
-                                    rowData={[]}
-                                    // frameworkComponents={{
-                                    //     LinkComponent
-                                    // }}
+                                    columnDefs={folloupColumn}
+                                    rowData={followUpData}
                                 >
                                 </AgGridReact>
                             </div>
@@ -453,7 +489,7 @@ function WeeklyReport() {
                             <h3 className="box-title">New Quotation</h3>
                             </div>
                             <div className="box-body chart-responsive">
-                            <div className="chart" id="line-chart" style={{height: '300px'}}>
+                            <div className="chart" id="line-chart" style={{height: '313px'}}>
                             <div
                                 className="ag-theme-alpine table"
                                 style={{
@@ -483,7 +519,7 @@ function WeeklyReport() {
                             <h3 className="box-title">Closed</h3>
                             </div>
                             <div className="box-body chart-responsive">
-                            <div className="chart" id="bar-chart" style={{height: '300px'}}>
+                            <div className="chart" id="bar-chart" style={{height: '313px'}}>
                             <div
                                 className="ag-theme-alpine table"
                                 style={{
