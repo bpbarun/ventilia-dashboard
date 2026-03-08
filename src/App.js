@@ -19,11 +19,12 @@ import Attendence from './components/Attendence';
 import Leave from './components/Leave';
 import RequestForApproval from './components/RequestForApproval';
 import TeamReports from './components/TeamReports';
+import WeeklyReport from './components/WeeklyReport'
+import FollowUpPage from './components/FollowUpPage'
 import { IP } from './components/Constant';
 import './index.css'
 function App() {
   const [token_code, setTokenCode] = useState('');
-  console.log('token_code===', localStorage.getItem("token_code"))
   useEffect(() => {
     axios.get(IP + 'ventilia-api/api/auth/auth/' + localStorage.getItem("token_code"), {
       headers: {
@@ -62,6 +63,8 @@ function App() {
           <Route path="/Leave" element={<Leave />} />
           <Route path="/RequestForApproval" element={<RequestForApproval />} />
           <Route path="/TeamReports" element={<TeamReports />} />
+          <Route path="/WeeklyReport" element={<WeeklyReport/>} />
+          <Route path="/FollowUp" element={<FollowUpPage/>} />
         </Routes>
       </>
     )

@@ -31,6 +31,7 @@ function LeadGeneration() {
     const [emobile, seteMobile] = useState('');
     const [emeetingDate, seteMeetingDate] = useState('');
     const [commentRow, setCommentRow] = useState([]);
+    const [otheRefrencName,setOtheRefrencName] = useState('');
     const notify = (msg, type) => {
         if (type === 'success') {
             toast.success(msg);
@@ -224,7 +225,9 @@ function LeadGeneration() {
     const handleESiteChange = (e) => {
         seteSiteOption(e.value)
     };
-
+    const handleRefrenceOtherName = (e)=>{
+        setOtheRefrencName(e.target.value)
+    }
     const updateLead = () => {
         if (eclientName === '') {
             notify('Name is required parameter', 'error');
@@ -238,7 +241,7 @@ function LeadGeneration() {
             'client_name': eclientName,
             'address': eaddress,
             'mobile': emobile,
-            'refrence': erefrencrOption,
+            'refrence': erefrencrOption ==='others' ? otheRefrencName:erefrencrOption,
             'site_stage': esiteOption,
             'is_active': 1,
             'meeting_date': emeetingDate
@@ -273,7 +276,7 @@ function LeadGeneration() {
             'client_name': clientName,
             'address': address,
             'mobile': mobile,
-            'refrence': refrencrOption,
+            'refrence': refrencrOption ==='others' ? otheRefrencName:refrencrOption,
             'site_stage': siteOption,
             'is_active': 1,
             'meeting_date': meetingDate,
@@ -340,6 +343,17 @@ function LeadGeneration() {
             seteResrenceOption(response.data.data.refrence)
             seteSiteOption(response.data.data.site_stage)
             seteMeetingDate(response.data.data.meeting_date)
+            const found = refrenceOptions.find(
+                (opt) => opt.value === response.data.data.refrence
+              );
+              if (found) {
+                seteResrenceOption(response.data.data.refrence);
+                setOtheRefrencName("");
+              } else {
+                seteResrenceOption("others");
+                setOtheRefrencName(response.data.data.refrence);
+              }
+
         }).catch(err => {
             console.log(err);
         });
@@ -548,6 +562,18 @@ function LeadGeneration() {
                                                 options={refrenceOptions}
                                             />
                                         </div>
+                                        {refrencrOption === "others" && (
+                                            <div className="form-group">
+                                                <label>Other Reference Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={refrencrOption === 'others' ? otheRefrencName:''}
+                                                    onChange={handleRefrenceOtherName}
+                                                    className="form-control"
+                                                    placeholder="Other Reference Name"
+                                                />
+                                            </div>
+                                        )}
                                         <div className="form-group">
                                             <label>Site Stage</label>
                                             <Select
@@ -604,7 +630,7 @@ function LeadGeneration() {
                                             <label>Address</label>
                                             <textarea value={eaddress} onChange={handleEAddress} className="form-control" rows="3" placeholder="Enter ..."></textarea>
                                         </div>
-                                        <div className="form-group">
+                                        {/* <div className="form-group">
                                             <label>Refrence</label>
                                             <Select
                                                 value={refrenceOptions.filter(function (option) {
@@ -613,7 +639,27 @@ function LeadGeneration() {
                                                 onChange={handleERefrenceChange}
                                                 options={refrenceOptions}
                                             />
+                                        </div> */}
+                                        <div className="form-group">
+                                            <label>Reference</label>
+                                            <Select
+                                                value={refrenceOptions.find(option => option.value === erefrencrOption)}
+                                                onChange={handleERefrenceChange}
+                                                options={refrenceOptions}
+                                            />
                                         </div>
+                                        {erefrencrOption === "others" && (
+                                            <div className="form-group">
+                                                <label>Other Reference Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={erefrencrOption === 'others' ? otheRefrencName:''}
+                                                    onChange={handleRefrenceOtherName}
+                                                    className="form-control"
+                                                    placeholder="Other Reference Name"
+                                                />
+                                            </div>
+                                        )}
                                         <div className="form-group">
                                             <label>Site Stage</label>
                                             <Select
