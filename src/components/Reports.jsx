@@ -70,7 +70,6 @@ function Reports() {
         { headerName: "60%", field: "sixty" },
         { headerName: "80%", field: "eighty" }
     ]
-    console.log('graphData is ==', graphData)
     useEffect(() => {
         axios.get(IP + 'ventilia-api/api/leadGeneration/leadGeneration/getReport', {
             headers: {
