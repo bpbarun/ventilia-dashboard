@@ -552,7 +552,7 @@ function WeeklyReport() {
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span></button>
-                                <h4 className="modal-title">Generate Lead</h4>
+                                <h4 className="modal-title">Add Details</h4>
                             </div>
                             <div className="modal-body">
                                 <div className="box-body">
@@ -570,7 +570,7 @@ function WeeklyReport() {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Name Quotation</label>
+                                        <label>New Quotation</label>
                                         <input
                                             type="text"
                                             className="form-control"
