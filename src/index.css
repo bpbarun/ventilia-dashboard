@@ -33,3 +33,16 @@ li {
   margin-bottom: 1rem;
 }
 
+.required{
+  color: red;
+ }
+ .add-user{
+  margin-bottom: 3px;
+  margin-left: 3px;
+ }
+ .blue{
+  color: blue
+ }
+ .float-right{
+  float: right !important;
+} 

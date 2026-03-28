@@ -22,6 +22,10 @@ import TeamReports from './components/TeamReports';
 import WeeklyReport from './components/WeeklyReport'
 import FollowUpPage from './components/FollowUpPage'
 import { IP } from './components/Constant';
+import TeamAssignment from'./components/TeamAssignment';
+import TeamleadSalesman from'./components/TeamleadSalesman';
+import TechnicalSalesman from'./components/TechnicalSalesman';
+import UserCrud from './components/UserCrud'
 import './index.css'
 function App() {
   const [token_code, setTokenCode] = useState('');
@@ -65,6 +69,11 @@ function App() {
           <Route path="/TeamReports" element={<TeamReports />} />
           <Route path="/WeeklyReport" element={<WeeklyReport/>} />
           <Route path="/FollowUp" element={<FollowUpPage/>} />
+          <Route path="/TeamAssignment" element={<TeamAssignment/>} />
+          <Route path="/TeamleadSalesman" element={<TeamleadSalesman/>} />
+          <Route path="/TechnicalSalesman" element={<TechnicalSalesman/>} />
+          <Route path="/UserCrud" element={<UserCrud/>} />
+          
         </Routes>
       </>
     )

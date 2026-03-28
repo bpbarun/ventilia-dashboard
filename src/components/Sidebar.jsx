@@ -199,9 +199,35 @@ function Sidebar() {
                                             <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> Reports</span>
                                         </li>
                                     </NavLink>
-                                    
                                 </ul>
-                                 
+                                <ul className="side-bar-menu">
+                                    <NavLink to="/UserCrud">
+                                        <li title="UserCrud">
+                                            <span className="menu_title"><i class="fa fa-male" aria-hidden="true"></i> New User</span>
+                                        </li>
+                                    </NavLink>
+                                </ul>
+                                <ul className="side-bar-menu">
+                                    <NavLink to="/TeamAssignment">
+                                        <li title="TeamAssignment">
+                                            <span className="menu_title"><i class="fa fa-users" aria-hidden="true"></i> TeamLead & Techical</span>
+                                        </li>
+                                    </NavLink>   
+                                </ul>
+                                <ul className="side-bar-menu">
+                                    <NavLink to="/TeamleadSalesman">
+                                        <li title="TeamleadSalesman">
+                                            <span className="menu_title"><i class="fa fa-address-book" aria-hidden="true"></i> Teamlead & Salesman</span>
+                                        </li>
+                                    </NavLink>
+                                </ul>
+                                <ul className="side-bar-menu">
+                                    <NavLink to="/TechnicalSalesman">
+                                        <li title="TechnicalSalesman">
+                                            <span className="menu_title"><i class="fa fa-user" aria-hidden="true"></i> Technical & Salesman</span>
+                                        </li>
+                                    </NavLink>
+                                </ul>
                              </>
                             }
                         </li>
