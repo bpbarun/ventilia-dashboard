@@ -10,6 +10,7 @@ import './weeklyReport.scss'
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const today = new Date().getDay(); 
+const isAfterMonday = today >= 2; // Tuesday onwards
 const isMonday = today === 1;
 // const isMonday = today === 0;
 function WeeklyReport() {
@@ -24,6 +25,8 @@ function WeeklyReport() {
         closing: ""
     });
     const [savedPromiseData, setSavedPromiseData] = useState([]);
+    const [promiseNotFilled, setPromiseNotFilled] = useState(false);
+
     const [savedActualData, setSavedActualData] = useState([]);
     const [followUpData,setFollowUpData] = useState([]);
     const [filters, setFilters] = useState({
@@ -51,7 +54,9 @@ function WeeklyReport() {
         fetchOpportunityData(week.from, week.to);
         completeLeadData(week.from, week.to);
         fetchFollowups(week.from, week.to);
+        fetchWeeklyPromise();
     }, []);
+
     const fetchLeadData = (fromDate = null, toDate = null) => {
         let postData={
             from: fromDate,
@@ -188,6 +193,7 @@ function WeeklyReport() {
                     fallowUp: "",
                     closing: ""
                 });
+                window.$('#addSalesPromise').modal('hide');
             }
         })
         .catch(err => {
@@ -231,14 +237,25 @@ function WeeklyReport() {
             }
         )
         .then((res) => {
-            if (res.data.status && res.data.data.length > 0) {
-                const data = res.data.data[0];
+            if (res?.data?.status && res?.data?.data?.length > 0) {
+                const data = res?.data?.data[0];
                 setPromiseData({
-                    newHunting: data.newHunting,
-                    newQuotation: data.newQuotation,
-                    fallowUp: data.fallowUp,
-                    closing: data.closing
+                    newHunting: data?.newHunting,
+                    newQuotation: data?.newQuotation,
+                    fallowUp: data?.fallowUp,
+                    closing: data?.closing
                 });
+                const isFilled =
+                data?.newHunting &&
+                data?.newQuotation &&
+                data?.fallowUp &&
+                data?.closing;
+                if (!isFilled && isAfterMonday && localStorage.getItem('salesmanUserID') == localStorage.getItem('user_id')) {
+                    setPromiseNotFilled(true)
+                    forceOpenModal();
+                }else{
+                    setPromiseNotFilled(false)
+                }
             } else {
                 setPromiseData({
                     newHunting: "",
@@ -246,9 +263,22 @@ function WeeklyReport() {
                     fallowUp: "",
                     closing: ""
                 });
+                if (isAfterMonday && localStorage.getItem('salesmanUserID') == localStorage.getItem('user_id')) {
+                    setPromiseNotFilled(true)
+                    forceOpenModal();
+                }else{
+                    setPromiseNotFilled(false)
+                }
             }
         })
         .catch(err => console.log(err));
+    };
+    const forceOpenModal = () => {
+        window.$('#addSalesPromise').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        window.$('#addSalesPromise').modal('show');
     };
 
     const fetchFollowups = (fromDate = null, toDate = null) => {
@@ -546,12 +576,13 @@ function WeeklyReport() {
                         </div>
                         </div>
                     </div>
-                    <div className="modal fade" keyboard={false} id="addSalesPromise">
+                    <div className="modal fade" keyboard={false} id="addSalesPromise" 
+                        data-backdrop="static" data-keyboard="false">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span></button>
+                                {/* <button type="button" className="close" data-dismiss="modal" aria-label="Close"> */}
+                                    {/* <span aria-hidden="true">&times;</span></button> */}
                                 <h4 className="modal-title">Add Details</h4>
                             </div>
                             <div className="modal-body">
@@ -609,9 +640,9 @@ function WeeklyReport() {
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                {isMonday && (
-                                <button type="button" onClick={savePromise} className="btn btn-primary" data-dismiss="modal">Save</button>
+                                {/* <button type="button" className="btn btn-default pull-left" data-dismiss="modal">Close</button> */}
+                                {(isMonday || promiseNotFilled) && (
+                                <button type="button" onClick={savePromise} className="btn btn-primary">Save</button>
                                 )}
                             </div>
                         </div>

@@ -40,9 +40,9 @@ function Login(props) {
             if (response.data.data.user_role === 'technical') {
                 window.location = "/QuotationUpload";
             } else if (response.data.data.user_role === 'sealseman') {
-                window.location = "/LeadGeneration";
+                window.location = "/WeeklyReport";
             }else if(response.data.data.user_role === 'sealseman_teamlead') {
-                window.location = "/TeamReports";
+                window.location = "/WeeklyReport";
             }
              else {
                 window.location = "/Reports";

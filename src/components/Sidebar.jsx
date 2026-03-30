@@ -53,6 +53,13 @@ function Sidebar() {
                             {role === 'sealseman' &&
                                 <>
                                     <ul className="side-bar-menu">
+                                        <NavLink to="/MyReport">
+                                            <li title="MyReport">
+                                            <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
+                                    <ul className="side-bar-menu">
                                         <NavLink to="/LeadGeneration">
                                             <li title="Dashboard">
                                                 <span className="menu_title"><i class="fa fa-tasks" aria-hidden="true"></i> Lead Generation</span>
@@ -66,13 +73,7 @@ function Sidebar() {
                                             </li>
                                         </NavLink>
                                     </ul>
-                                    <ul className="side-bar-menu">
-                                        <NavLink to="/MyReport">
-                                            <li title="MyReport">
-                                            <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
-                                            </li>
-                                        </NavLink>
-                                    </ul>
+                                    
                                     {/* <ul className="side-bar-menu">
                                  <NavLink to="/ShowLocation">
                                      <li title="Locaion">
@@ -112,6 +113,13 @@ function Sidebar() {
                             }
                             {role === 'sealseman_teamlead' &&
                                 <>
+                                 <ul className="side-bar-menu">
+                                        <NavLink to={`/MyReport/`+localStorage.getItem('user_id')}>
+                                            <li title="MyReport">
+                                                <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
+                                            </li>
+                                        </NavLink>
+                                    </ul>
                                     <ul className="side-bar-menu">
                                     <NavLink to="/TeamReports">
                                         <li title="My Team Report">
@@ -130,13 +138,6 @@ function Sidebar() {
                                         <NavLink to="/Opportunity">
                                             <li title="Dashboard">
                                                 <span className="menu_title"><i class="fa fa-credit-card" aria-hidden="true"></i> Opprtunity Details</span>
-                                            </li>
-                                        </NavLink>
-                                    </ul>
-                                    <ul className="side-bar-menu">
-                                        <NavLink to={`/MyReport/`+localStorage.getItem('user_id')}>
-                                            <li title="MyReport">
-                                                <span className="menu_title"><i class="fa fa-tachometer" aria-hidden="true"></i> MyReport</span>
                                             </li>
                                         </NavLink>
                                     </ul>
