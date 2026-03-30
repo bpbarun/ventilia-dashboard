@@ -13,11 +13,9 @@ function Header() {
     const [noOfRequestData,setNoOfRequestData] = useState(0)
     const [frenchaisesOptions,setFrenchaisesOptions] = useState([])
     const [frenchaisesOption,setFrenchaisesOption] = useState("")
+    const [openOption,setOpenOption] = useState(false)
     const location = useLocation();
-    const logoutPopup = (id) => {
-        let element = document.getElementById(id);
-        element.classList.toggle('open');
-    }
+    
     const callLogout = () => {
         axios.delete(IP + 'ventilia-api/index.php/api/login/login/' + localStorage.getItem("token_id"), {
             headers: {
@@ -197,7 +195,7 @@ function Header() {
 
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
-                            <li className="dropdown user user-menu" id="headrUserName" onClick={() => { logoutPopup('headrUserName') }}>
+                            <li className={`dropdown user user-menu ${openOption ?'open':''}`} id="headrUserName" onClick={() => {setOpenOption(prev => !prev)}}>
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                                     <i className="fa fa-user" aria-hidden="true"></i>
                                     <span>{localStorage.getItem("user_name")}</span>
