@@ -41,7 +41,7 @@ const TechnicalSalesman = () => {
       setUsers(response.data.data)
       let data =  response.data.data
       const teamleads = data
-      .filter((u) => u.user_role === "sealseman_teamlead")
+      .filter((u) => u.user_role === "technical")
       .map((u) => ({ label: u.user_name, value: u.user_id }));
 
     const sealseman = data
