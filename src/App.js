@@ -50,7 +50,7 @@ function App() {
         <Sidebar />
         <CurrentLocation />
         <Routes>
-          <Route path="/" element={<LeadGeneration />} />
+          <Route path="/" element={<WeeklyReport />} />
           <Route path="/LeadGeneration" element={<LeadGeneration />} />
           <Route path="/QuotationUpload" element={<UploadQuatation />} />
           <Route path="/QuotationUpload/:id" element={<UploadQuatation />} />
