@@ -111,11 +111,11 @@ const TeamleadSalesman = () => {
         sealesman_id: selectedTechnicians.map((t) => t.value).join(","),
       };  
       const existing = mappingList.find(
-        (m) => Number(m.technical_id) === Number(selectedTeamlead.value)
+        (m) => Number(m.teamlead_id) === Number(selectedTeamlead.value)
       );
       try {
         if (existing) {
-          // ✅ UPDATE
+          // ✅ UPDATE 
           await axios.put(
             IP + "ventilia-api/api/user/TeamleadSalesman/" + selectedTeamlead.value,
             payload,
