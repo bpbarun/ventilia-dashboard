@@ -3,10 +3,20 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IP } from './Constant';
-import { useLocation,NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import Select from 'react-select';
 
 function Header() {
+    const navigate = useNavigate();
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+        const role = localStorage.getItem("user_role");
+        if (role === 'technical') {
+            navigate('/QuotationUpload');
+        } else {
+            navigate('/');
+        }
+    };
     const [password, setPassword] = useState('')
     const [confPassword, setConfPassword] = useState('')
     const [oldPassword, setOldPassword] = useState('')
@@ -163,7 +173,7 @@ function Header() {
     return (
         <>
             <header className="main-header">
-                <a href="/" className="logo">
+                <a href="/" onClick={handleLogoClick} className="logo">
                     <span className="logo-lg"><b>Ventilia</b></span>
                 </a>
                 <nav className="navbar navbar-static-top">

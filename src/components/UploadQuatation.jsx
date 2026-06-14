@@ -11,7 +11,7 @@ import { IP } from './Constant';
 import ShowLeadAssets from './ShowLeadAssets';
 
 function UploadQuatation() {
-    const [selectedFile, setSelectedFile] = useState('');
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const [uploadId, setUploadId] = useState(0);
     const [totalPrice, setTotalPrice] = useState('');
     const [totalUnit, setTotalUnit] = useState('');
@@ -174,35 +174,37 @@ function UploadQuatation() {
 
 
     const onChangeHandler = (event) => {
-        setSelectedFile(event.target.files[0]);
+        setSelectedFiles(Array.from(event.target.files));
     };
-    const onClickHandler = (file) => {
-        console.log('selectedFile', selectedFile.File)
-        const data = new FormData();
-        data.append("file", selectedFile);
-        data.append("lead_id", uploadId);
-        data.append("is_active", 1);
-        data.append("total_area", totalArea);
-        data.append("total_unit", totalUnit);
-        data.append("average_price", totalPrice);
-        axios
-            .post(IP + "ventilia-api/index.php/api/quotationUpload/quotationUpload/", data, {
-                headers: {
-                    'token_code': localStorage.getItem("token_code"),
-                    'content-type': 'multipart/form-data',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-                    'Access-Control-Allow-Headers': '*'
-                }
-            })
-            .then(res => {
-                notify('Quotation uploaded successfullly.', 'success')
-            })
-            .catch(err => {
-                notify('Getting error in uploading the Quotation.', 'error')
-                console.log(err);
-                // navigate('/login');
-            });
+    const onClickHandler = async () => {
+        if (selectedFiles.length === 0) {
+            notify('Please select at least one file.', 'error');
+            return;
+        }
+        const headers = {
+            'token_code': localStorage.getItem("token_code"),
+            'content-type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Access-Control-Allow-Headers': '*'
+        };
+        try {
+            for (const file of selectedFiles) {
+                const data = new FormData();
+                data.append("file", file);
+                data.append("lead_id", uploadId);
+                data.append("is_active", 1);
+                data.append("total_area", totalArea);
+                data.append("total_unit", totalUnit);
+                data.append("average_price", totalPrice);
+                await axios.post(IP + "ventilia-api/index.php/api/quotationUpload/quotationUpload/", data, { headers });
+            }
+            notify(`${selectedFiles.length} quotation(s) uploaded successfully.`, 'success');
+            setSelectedFiles([]);
+        } catch (err) {
+            notify('Error uploading one or more quotations.', 'error');
+            console.log(err);
+        }
     };
     const handleTotalArea = (e) => {
         setTotalArea(e.target.value);
@@ -394,7 +396,10 @@ function UploadQuatation() {
                                     <form role="form">
                                         <div className="form-group">
                                             <label>Upload</label>
-                                            <input type="file" onChange={onChangeHandler} className="form-control" />
+                                            <input type="file" multiple onChange={onChangeHandler} className="form-control" />
+                                            {selectedFiles.length > 0 && (
+                                                <small className="text-muted">{selectedFiles.length} file(s) selected</small>
+                                            )}
                                         </div>
                                         <div className="form-group">
                                             <label>Total Area</label>

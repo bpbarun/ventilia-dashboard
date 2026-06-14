@@ -337,12 +337,15 @@ function Opportunity() {
 
     const saveOffer = () => {
         if(gstOption === null){
-            notify('Please select GstType','error');
+            notify('Please select GST Type','error');
+            return;
         }
+        const gstToSave = (gstOption === '#') ? '#' : (gstOption === '*') ? '*' : gst;
+        const gstTypeToSave = (gstOption === '#') ? 'gst' : (gstOption === '*') ? 'value' : gstOption;
         const data = {
             'offer_price': offerPrice,
-            'gstType':gstOption,
-            'gst': gst,
+            'gstType': gstTypeToSave,
+            'gst': gstToSave,
             'freight': freight,
             'show_extra':showExtra,
             'is_active': 1,
@@ -608,12 +611,15 @@ function Opportunity() {
         fetchLeadData(uploadId);
         setShowLetter(true);
     }
-    const gstValue = [
-        { value: 'value', label: 'Value' },
-        { value: 'gst', label: 'Gst' }
+    const gstOptions = [
+        { value: '#', label: '# (18% GST - Standard)' },
+        { value: '*', label: '* (81/sqft - Standard)' },
+        { value: 'gst', label: 'Custom Percentage (%)' },
+        { value: 'value', label: 'Custom Value (per sqft)' },
     ];
     const handleGstValue = (e)=>{
         setGstOption(e.value)
+        setGst('')
     }
     const onGridReady=(params)=>{
     // gridApi=params.api
@@ -702,18 +708,24 @@ function Opportunity() {
                                         <div className="form-group">
                                             <label>GST Type</label>
                                             <Select
-                                                value={gstValue.filter(function (option) {
-                                                    return option.value === gstOption;
-                                                })}
+                                                value={gstOptions.find(o => o.value === gstOption) || null}
                                                 onChange={handleGstValue}
-                                                options={gstValue}
+                                                options={gstOptions}
                                             />
                                         </div>
 
+                                        {(gstOption === 'gst' || gstOption === 'value') && (
                                         <div className="form-group">
-                                            <label>GST</label>
-                                            <input type="text" value={gst} onChange={handleGst} className="form-control" placeholder="GST" />
+                                            <label>GST {gstOption === 'gst' ? 'Percentage (%)' : 'Amount (per sqft)'}</label>
+                                            <input
+                                                type="number"
+                                                value={gst}
+                                                onChange={handleGst}
+                                                className="form-control"
+                                                placeholder={gstOption === 'value' ? 'e.g. 450' : 'e.g. 18'}
+                                            />
                                         </div>
+                                        )}
                                         <div className="form-group">
                                             <label>Freight</label>
                                             <input type="number" value={freight} onChange={handleFreight} className="form-control" placeholder="Freight Amount" />

@@ -371,10 +371,24 @@ function MyReport() {
                     address: lead.address,
                     complete_lead_comment: lead.complete_lead_comment,
                     created_on: lead.created_on,
+                    viewquotation: lead.lead_id,
                 }))) : setCompletedLeadRow([])
         }).catch(err => {
             console.log(err);
         });
+    }
+    function viewCompletedQuotation(props) {
+        return (
+            <a
+                onClick={() => getQuotationData(props.value)}
+                data-dismiss="modal"
+                data-toggle="modal"
+                data-target="#showQuotation"
+                style={{ cursor: 'pointer' }}
+            >
+                View Quotation
+            </a>
+        );
     }
     const showCompletedLead = () => {
         const columnDefs1 = [
@@ -382,7 +396,11 @@ function MyReport() {
             { headerName: "Mobile", field: "mobile" },
             { headerName: "Address", field: "address" },
             { headerName: "Comment", field: "complete_lead_comment" },
-            { headerName: "Created On", field: "created_on" }
+            { headerName: "Created On", field: "created_on" },
+            {
+                headerName: "Quotation", field: "viewquotation",
+                cellRenderer: viewCompletedQuotation,
+            }
         ]
         return (
             <>
@@ -402,6 +420,7 @@ function MyReport() {
 
                         columnDefs={columnDefs1}
                         rowData={completedLeadRow}
+                        frameworkComponents={{ viewCompletedQuotation }}
                     >
                     </AgGridReact>
                 </div>
